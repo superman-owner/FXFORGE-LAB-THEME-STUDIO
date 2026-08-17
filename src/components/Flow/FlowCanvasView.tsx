@@ -1284,7 +1284,7 @@ const FlowContent: React.FC<{ isTraining?: boolean }> = ({ isTraining = false })
   //  Listen to blueprint load events from Strategy Vault Sidebar
   useEffect(() => {
     const handleLoadBlueprint = (e: any) => {
-      if (e.detail?.nodes && e.detail?.edges) {
+      if (e.detail?.nodes !== undefined && e.detail?.edges !== undefined) {
         setNodes(e.detail.nodes);
         setEdges(e.detail.edges);
         syncArchitectureToEngine(e.detail.nodes);

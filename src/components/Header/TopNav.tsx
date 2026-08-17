@@ -14,6 +14,11 @@ interface TopNavProps {
   rlLatestStep?: RLEnvironmentStep | null;
   onOpenMT5Deploy?: () => void;
   onResetCamera?: () => void;
+  onOpenProjectManager?: () => void;
+  onOpenSaveProject?: () => void;
+  onNewProject?: () => void;
+  onExportProject?: () => void;
+  onImportProject?: () => void;
 }
 
 export const TopNav: React.FC<TopNavProps> = ({
@@ -26,9 +31,27 @@ export const TopNav: React.FC<TopNavProps> = ({
   rlTelemetry,
   rlLatestStep,
   onOpenMT5Deploy,
+  onOpenProjectManager,
+  onOpenSaveProject,
+  onNewProject,
+  onExportProject,
+  onImportProject,
 }) => {
   const { theme, toggleTheme } = useTheme();
   const isLight = theme === 'light';
+  const [isProjectsOpen, setIsProjectsOpen] = React.useState(false);
+  const projectsMenuRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (!isProjectsOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (projectsMenuRef.current && !projectsMenuRef.current.contains(e.target as Node)) {
+        setIsProjectsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isProjectsOpen]);
 
   return (
     <header
@@ -39,8 +62,8 @@ export const TopNav: React.FC<TopNavProps> = ({
           : 'vision-glass apple-specular border-white/[0.08] text-slate-200'
       }`}
     >
-      {/* Left: macOS Traffic Lights + Brand + Left Divider */}
-      <div className="flex items-center gap-3.5 flex-shrink-0 min-w-max">
+      {/* Left: macOS Traffic Lights + Brand + Projects Dropdown + Divider */}
+      <div className="flex items-center gap-3 flex-shrink-0 min-w-max">
         <div className="flex items-center gap-1.5 pr-1">
           <div className="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]/50 cursor-pointer hover:opacity-80 transition-opacity" />
           <div className="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#dea123]/50 cursor-pointer hover:opacity-80 transition-opacity" />
@@ -53,11 +76,109 @@ export const TopNav: React.FC<TopNavProps> = ({
           </span>
         </div>
 
-        {/*  Vertical Divider with perfectly balanced symmetrical spacing on both sides */}
-        <div
-          style={{ marginRight: '14px' }}
-          className={`h-4 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/15' : 'bg-white/15'}`}
-        />
+        {/*  Vertical Divider */}
+        <div className={`h-4 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/15' : 'bg-white/15'}`} />
+
+        {/* FxDreema-Style Projects Dropdown Menu */}
+        <div className="relative" ref={projectsMenuRef}>
+          <button
+            onClick={() => setIsProjectsOpen(!isProjectsOpen)}
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer select-none ${
+              isProjectsOpen
+                ? isLight
+                  ? 'bg-black/10 text-[#0071e3]'
+                  : 'bg-white/15 text-[#007aff]'
+                : isLight
+                ? 'hover:bg-black/5 text-[#1d1d1f]'
+                : 'hover:bg-white/10 text-white/90'
+            }`}
+          >
+            <LucideIcons.FolderKanban size={13} className="text-[#007aff]" />
+            <span>Projects</span>
+            <LucideIcons.ChevronDown size={11} className={`transition-transform duration-150 ${isProjectsOpen ? 'rotate-180' : ''}`} />
+          </button>
+
+          {isProjectsOpen && (
+            <div
+              className={`absolute left-0 top-full mt-1.5 w-56 rounded-2xl border shadow-xl py-1.5 z-50 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-150 ${
+                isLight
+                  ? 'bg-white/95 border-black/10 text-[#1d1d1f] shadow-[0_10px_30px_rgba(0,0,0,0.12)]'
+                  : 'bg-[#14141e]/95 border-white/10 text-white shadow-[0_15px_40px_rgba(0,0,0,0.7)]'
+              }`}
+            >
+              <button
+                onClick={() => {
+                  setIsProjectsOpen(false);
+                  onOpenProjectManager?.();
+                }}
+                className={`w-full px-3 py-1.5 text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer text-left ${
+                  isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
+                }`}
+              >
+                <LucideIcons.FolderOpen size={13} className="text-[#007aff]" />
+                <span className="flex-1 font-semibold">Load Project...</span>
+                <span className="text-[10px] opacity-40 font-mono">⌘O</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsProjectsOpen(false);
+                  onOpenSaveProject?.();
+                }}
+                className={`w-full px-3 py-1.5 text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer text-left ${
+                  isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
+                }`}
+              >
+                <LucideIcons.Save size={13} className="text-[#30d158]" />
+                <span className="flex-1">Save Project...</span>
+                <span className="text-[10px] opacity-40 font-mono">⌘S</span>
+              </button>
+
+              <div className={`my-1 h-[1px] ${isLight ? 'bg-black/5' : 'bg-white/10'}`} />
+
+              <button
+                onClick={() => {
+                  setIsProjectsOpen(false);
+                  onNewProject?.();
+                }}
+                className={`w-full px-3 py-1.5 text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer text-left ${
+                  isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
+                }`}
+              >
+                <LucideIcons.FilePlus size={13} className="text-[#ff9f0a]" />
+                <span className="flex-1">New Blank Project</span>
+              </button>
+
+              <div className={`my-1 h-[1px] ${isLight ? 'bg-black/5' : 'bg-white/10'}`} />
+
+              <button
+                onClick={() => {
+                  setIsProjectsOpen(false);
+                  onImportProject?.();
+                }}
+                className={`w-full px-3 py-1.5 text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer text-left ${
+                  isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
+                }`}
+              >
+                <LucideIcons.Upload size={13} className="text-[#bf5af2]" />
+                <span className="flex-1">Import Project (.json)</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsProjectsOpen(false);
+                  onExportProject?.();
+                }}
+                className={`w-full px-3 py-1.5 text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer text-left ${
+                  isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
+                }`}
+              >
+                <LucideIcons.Download size={13} className="text-[#64d2ff]" />
+                <span className="flex-1">Export Project (.json)</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Main Suite (Shifted to the Right: 'Connected' & Theme Toggle end exactly 20px from right edge) */}

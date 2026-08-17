@@ -11,11 +11,21 @@ import type { QuantTelemetry, RLEnvironmentStep } from './services/fxforgeEngine
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { FlowProvider, useFlow } from './context/FlowContext';
 
+import { ProjectManagerModal } from './components/Modals/ProjectManagerModal';
+import { SaveProjectModal } from './components/Modals/SaveProjectModal';
+import {
+  getSavedProjects,
+  getActiveProjectId,
+  exportProjectToFile,
+  importProjectFromFile,
+} from './services/projectService';
+import type { SavedProject } from './types/project';
+
 function AppContent() {
   const { theme } = useTheme();
   const { architectureSpec } = useFlow();
 
-  // Dual View Mode: 'studio' (Flow DAG) vs 'bpnn' (Live 3D BPNN)
+  // Active View Switcher: 'bpnn' (Live 3D BPNN Visualizer) or 'studio' (Flow DAG)
   const [activeView, setActiveView] = useState<'studio' | 'bpnn'>('studio');
 
   // Sidebar Collapsed State (Active on both views, collapsible to the left)
@@ -37,7 +47,10 @@ function AppContent() {
   });
   const [rlLatestStep, setRlLatestStep] = useState<RLEnvironmentStep | null>(null);
   const [isMT5DeployOpen, setIsMT5DeployOpen] = useState(false);
+  const [isProjectManagerOpen, setIsProjectManagerOpen] = useState(false);
+  const [isSaveProjectOpen, setIsSaveProjectOpen] = useState(false);
   const [cameraResetTrigger, setCameraResetTrigger] = useState(0);
+  const fileImportInputRef = useRef<HTMLInputElement>(null);
 
   // Ensure stale processes are killed on fresh page boot
   useEffect(() => {
@@ -164,7 +177,7 @@ function AppContent() {
         body: JSON.stringify(payload),
       }).catch(() => {});
     }
-  }, [architectureSpec]);
+  }, [architectureSpec, rlStatus]);
 
   const handlePauseRL = useCallback(() => {
     setRlStatus('paused');
@@ -186,12 +199,76 @@ function AppContent() {
     }
   }, []);
 
+  const handleNewProject = useCallback(() => {
+    // Reset to default blank canvas template
+    window.dispatchEvent(
+      new CustomEvent('fxforge-load-blueprint', {
+        detail: {
+          nodes: [],
+          edges: [],
+          name: 'New Blank Strategy',
+        },
+      })
+    );
+    setLogs((prev) => [...prev, `[STUDIO] Reset canvas to a clean new blank project.`]);
+  }, []);
+
+  const handleExportProjectDirect = useCallback(() => {
+    const active = getSavedProjects().find((p) => p.id === getActiveProjectId()) || {
+      id: `mt5-${Math.floor(1000 + Math.random() * 9000)}`,
+      name: 'FXFORGE_Custom_Pipeline',
+      type: 'Deep RL Policy' as const,
+      language: 'MQL5' as const,
+      symbol: architectureSpec?.symbol || 'XAUUSD',
+      timeframe: architectureSpec?.timeframe || 'M15',
+      nodesCount: 0,
+      createdAt: new Date().toISOString(),
+      modifiedAt: new Date().toISOString(),
+      nodes: [],
+      edges: [],
+    };
+    exportProjectToFile(active);
+    setLogs((prev) => [...prev, `[STUDIO] Exported project "${active.name}" to JSON file.`]);
+  }, [architectureSpec]);
+
+  const handleFileImportDirect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const imported = await importProjectFromFile(file);
+      if (imported.nodes && imported.nodes.length > 0) {
+        window.dispatchEvent(
+          new CustomEvent('fxforge-load-blueprint', {
+            detail: {
+              nodes: imported.nodes,
+              edges: imported.edges || [],
+              name: imported.name,
+            },
+          })
+        );
+      }
+      setLogs((prev) => [...prev, `[STUDIO] Imported and loaded strategy "${imported.name}".`]);
+    } catch (err: any) {
+      alert(`Import error: ${err.message}`);
+    }
+    if (fileImportInputRef.current) fileImportInputRef.current.value = '';
+  };
+
   return (
     <div
       className={`h-screen w-screen flex flex-col overflow-hidden font-sans select-none antialiased transition-colors duration-200 ${
         theme === 'light' ? 'bg-[#f5f5f7] text-[#1d1d1f]' : 'bg-[#040407] text-slate-100'
       }`}
     >
+      {/* Hidden File Input for direct TopNav import */}
+      <input
+        type="file"
+        ref={fileImportInputRef}
+        onChange={handleFileImportDirect}
+        accept=".json,.xml"
+        className="hidden"
+      />
+
       {/*  Top Navigation Bar */}
       <TopNav
         activeView={activeView}
@@ -204,6 +281,11 @@ function AppContent() {
         rlLatestStep={rlLatestStep}
         onOpenMT5Deploy={() => setIsMT5DeployOpen(true)}
         onResetCamera={() => setCameraResetTrigger((prev) => prev + 1)}
+        onOpenProjectManager={() => setIsProjectManagerOpen(true)}
+        onOpenSaveProject={() => setIsSaveProjectOpen(true)}
+        onNewProject={handleNewProject}
+        onExportProject={handleExportProjectDirect}
+        onImportProject={() => fileImportInputRef.current?.click()}
       />
 
       {/*  Main Quantum Visualizer & Flow DAG Stage with Shared Left Sidebar */}
@@ -240,6 +322,23 @@ function AppContent() {
         rlStatus={rlStatus}
         rlTelemetry={rlTelemetry}
         latestStep={rlLatestStep}
+      />
+
+      {/*  FxDreema-Style Load Project Manager Modal */}
+      <ProjectManagerModal
+        isOpen={isProjectManagerOpen}
+        onClose={() => setIsProjectManagerOpen(false)}
+        onOpenSaveModal={() => setIsSaveProjectOpen(true)}
+        onNewProject={handleNewProject}
+      />
+
+      {/*  Save Strategy Project Modal */}
+      <SaveProjectModal
+        isOpen={isSaveProjectOpen}
+        onClose={() => setIsSaveProjectOpen(false)}
+        onSaved={(project: SavedProject) => {
+          setLogs((prev) => [...prev, `[STUDIO] Saved project "${project.name}" (${project.id}) successfully.`]);
+        }}
       />
 
       {/*  MT5 One-Click Deploy Modal */}
