@@ -21,6 +21,7 @@ import { useFlow } from '../../context/FlowContext';
 interface AnalyticsDrawerProps {
   logs: string[];
   isRunning: boolean;
+  rlStatus?: 'stopped' | 'running' | 'paused';
   onClearLogs?: () => void;
   rlTelemetry?: QuantTelemetry | null;
   latestStep?: RLEnvironmentStep | null;
@@ -53,30 +54,20 @@ const MiniRadialGauge: React.FC<MiniRadialGaugeProps> = ({
 
   const radius = isMaximized ? 30 : 18;
   const circumference = 2 * Math.PI * radius;
-  // 240 degree sweep
-  const arcLength = (240 / 360) * circumference;
-  const strokeDashoffset = arcLength - (percentage / 100) * arcLength;
+  const arcLength = circumference * 0.75;
+  const strokeDashoffset = arcLength - (arcLength * Math.min(100, Math.max(0, percentage))) / 100;
 
   return (
     <div
-      className={`border flex flex-col items-center justify-center text-center relative overflow-hidden min-h-0 transition-all duration-200 ${
+      className={`relative flex flex-col items-center justify-center border transition-all duration-200 ${
         isLight
-          ? 'bg-white border-black/[0.08] shadow-[0_4px_16px_rgba(0,0,0,0.06)]'
-          : 'bg-gradient-to-b from-[#161624]/95 to-[#0d0d14]/95 border-white/[0.08] shadow-[0_8px_20px_rgba(0,0,0,0.5)]'
-      } ${isMaximized ? 'rounded-3xl' : 'rounded-2xl'}`}
-      style={{ padding: isMaximized ? '18px 16px' : '8px 10px' }}
+          ? 'bg-[#f5f5f7] border-black/[0.06] shadow-[0_2px_10px_rgba(0,0,0,0.03)]'
+          : 'bg-[#101018]/90 border-white/[0.06] shadow-[0_4px_16px_rgba(0,0,0,0.4)]'
+      } ${isMaximized ? 'rounded-2xl p-3.5' : 'rounded-xl p-2'}`}
     >
-      {/* Background Ambient Glow */}
+      {/* Radial Gauge SVG Ring */}
       <div
-        className={`absolute top-2 left-1/2 -translate-x-1/2 rounded-full blur-xl pointer-events-none ${
-          isLight ? 'opacity-10' : 'opacity-20'
-        } ${isMaximized ? 'w-24 h-24' : 'w-14 h-14'}`}
-        style={{ backgroundColor: color }}
-      />
-
-      {/*  Top Radial Gauge Dial (Adaptive Size: 44px normal / 74px maximized) */}
-      <div
-        className={`relative flex-shrink-0 flex items-center justify-center z-10 transition-all duration-200 ${
+        className={`relative flex items-center justify-center flex-shrink-0 transition-all ${
           isMaximized ? 'w-18 h-18' : 'w-11 h-11'
         }`}
       >
@@ -141,9 +132,9 @@ const MiniRadialGauge: React.FC<MiniRadialGaugeProps> = ({
       </div>
 
       <div
-        className={`font-medium z-10 truncate max-w-full px-1 leading-tight ${
-          isLight ? 'text-[#8e8e93]' : 'text-[#636366]'
-        } ${isMaximized ? 'text-[11px]' : 'text-[9px]'}`}
+        className={`font-medium z-10 transition-all ${
+          isLight ? 'text-[#86868b]' : 'text-[#a1a1a6]'
+        } ${isMaximized ? 'text-[11px]' : 'text-[8.5px]'}`}
         style={{ fontFamily: 'var(--font-sans)' }}
       >
         {sublabel}
@@ -155,6 +146,7 @@ const MiniRadialGauge: React.FC<MiniRadialGaugeProps> = ({
 export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
   logs,
   isRunning,
+  rlStatus = isRunning ? 'running' : 'stopped',
   rlTelemetry,
   latestStep,
 }) => {
@@ -187,30 +179,33 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
   }, [rlTelemetry, latestStep]);
 
   const currentTelemetry = rlTelemetry || fxforgeEngine.getTelemetry();
+  const isStandby = (rlStatus === 'stopped' || !rlStatus) && (currentTelemetry.episodes === 0);
+  const isActiveOrPaused = rlStatus === 'running' || rlStatus === 'paused';
+
   const totalReturnPct =
-    isRunning
+    isActiveOrPaused
       ? ((currentTelemetry.currentEquity - currentTelemetry.initialCapital) / currentTelemetry.initialCapital) * 100
       : 0.0;
-  const winRateVal = isRunning ? currentTelemetry.winRate : 0.0;
-  const sharpeVal = isRunning ? currentTelemetry.annualizedSharpe : 0.0;
-  const maxDdVal = isRunning ? currentTelemetry.maxDrawdown : 0.0;
-  const sortinoVal = isRunning ? currentTelemetry.annualizedSortino : 0.0;
-  const totalTradesVal = isRunning ? currentTelemetry.totalTrades : 0;
-  const totalRewardVal = isRunning ? currentTelemetry.totalReward : 0.0;
+  const winRateVal = isActiveOrPaused ? currentTelemetry.winRate : 0.0;
+  const sharpeVal = isActiveOrPaused ? currentTelemetry.annualizedSharpe : 0.0;
+  const maxDdVal = isActiveOrPaused ? currentTelemetry.maxDrawdown : 0.0;
+  const sortinoVal = isActiveOrPaused ? currentTelemetry.annualizedSortino : 0.0;
+  const totalTradesVal = isActiveOrPaused ? currentTelemetry.totalTrades : 0;
+  const totalRewardVal = isActiveOrPaused ? currentTelemetry.totalReward : 0.0;
   const profitFactorVal =
-    isRunning && currentTelemetry.losingTrades > 0
+    isActiveOrPaused && currentTelemetry.losingTrades > 0
       ? ((currentTelemetry.winningTrades * 1.5) / currentTelemetry.losingTrades).toFixed(2)
-      : isRunning && currentTelemetry.winningTrades > 0
+      : isActiveOrPaused && currentTelemetry.winningTrades > 0
       ? '3.50'
       : '0.00';
 
-  const buyPct = isRunning && latestStep?.actionProbs ? (latestStep.actionProbs[0] * 100).toFixed(1) : '0.0';
-  const holdPct = isRunning && latestStep?.actionProbs ? (latestStep.actionProbs[1] * 100).toFixed(1) : '0.0';
-  const sellPct = isRunning && latestStep?.actionProbs ? (latestStep.actionProbs[2] * 100).toFixed(1) : '0.0';
+  const buyPct = isActiveOrPaused && latestStep?.actionProbs ? (latestStep.actionProbs[0] * 100).toFixed(1) : '0.0';
+  const holdPct = isActiveOrPaused && latestStep?.actionProbs ? (latestStep.actionProbs[1] * 100).toFixed(1) : '0.0';
+  const sellPct = isActiveOrPaused && latestStep?.actionProbs ? (latestStep.actionProbs[2] * 100).toFixed(1) : '0.0';
 
   const totalEpisodesTarget = architectureSpec?.totalEpisodes || 400;
-  const currentEpisodesDisplay = isRunning ? currentTelemetry.episodes : 0;
-  const progressPct = isRunning ? ((currentEpisodesDisplay / totalEpisodesTarget) * 100).toFixed(1) : '0.0';
+  const currentEpisodesDisplay = isActiveOrPaused ? currentTelemetry.episodes : 0;
+  const progressPct = isActiveOrPaused ? ((currentEpisodesDisplay / totalEpisodesTarget) * 100).toFixed(1) : '0.0';
 
   return (
     <div
@@ -348,10 +343,16 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
             <div className="flex items-center gap-1.5 text-[11px] font-medium whitespace-nowrap flex-shrink-0">
               <span
                 className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                  isRunning ? (isLight ? 'bg-[#28cd41] shadow-[0_0_6px_#28cd41] animate-pulse' : 'bg-[#30d158] shadow-[0_0_6px_#30d158] animate-pulse') : 'bg-[#ffd60a]'
+                  isRunning
+                    ? (isLight ? 'bg-[#28cd41] shadow-[0_0_6px_#28cd41] animate-pulse' : 'bg-[#30d158] shadow-[0_0_6px_#30d158] animate-pulse')
+                    : rlStatus === 'paused'
+                    ? 'bg-[#ffd60a] shadow-[0_0_6px_rgba(255,214,10,0.6)]'
+                    : 'bg-[#86868b]'
                 }`}
               />
-              <span className={`whitespace-nowrap ${isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}`}>Training Progress:</span>
+              <span className={`whitespace-nowrap ${isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}`}>
+                {rlStatus === 'paused' ? 'Training Paused:' : 'Training Progress:'}
+              </span>
             </div>
 
             {/* Frameless Sleek Progress Track */}
@@ -546,7 +547,7 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                         stroke="url(#audiSpeedoGrad)"
                         strokeWidth={isMaximized ? 7.5 : 6.5}
                         strokeDasharray="125.6"
-                        strokeDashoffset={125.6 * (1 - Math.min(100, Math.max(0, winRateVal)) / 100)}
+                        strokeDashoffset={125.6 * (1 - (isActiveOrPaused ? Math.min(100, Math.max(0, winRateVal)) : 0) / 100)}
                         strokeLinecap="round"
                         style={{
                           filter: isLight ? 'none' : 'drop-shadow(0 0 7px rgba(48, 209, 88, 0.7))',
@@ -563,7 +564,7 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                         fontSize={isMaximized ? 15 : 13}
                         fontWeight="bold"
                       >
-                        {winRateVal.toFixed(1)}%
+                        {isActiveOrPaused ? `${winRateVal.toFixed(1)}%` : '--'}
                       </text>
                       <text
                         x="55"
@@ -585,9 +586,9 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                   {/* Sharpe Gauge */}
                   <MiniRadialGauge
                     label="Sharpe"
-                    value={sharpeVal.toFixed(2)}
+                    value={isActiveOrPaused ? sharpeVal.toFixed(2) : '--'}
                     sublabel="Tier 1 Institutional"
-                    percentage={Math.min(100, Math.max(0, (sharpeVal / 4.0) * 100))}
+                    percentage={isActiveOrPaused ? Math.min(100, Math.max(0, (sharpeVal / 4.0) * 100)) : 0}
                     color="#30d158"
                     glowColor="rgba(48, 209, 88, 0.6)"
                     icon={<LucideIcons.TrendingUp size={isMaximized ? 22 : 15} strokeWidth={2.5} />}
@@ -597,9 +598,9 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                   {/* Max Drawdown Gauge */}
                   <MiniRadialGauge
                     label="Max DD"
-                    value={`-${maxDdVal.toFixed(1)}%`}
+                    value={isActiveOrPaused ? `-${maxDdVal.toFixed(1)}%` : '--'}
                     sublabel="Safety Limit"
-                    percentage={Math.min(100, Math.max(0, (maxDdVal / 25.0) * 100))}
+                    percentage={isActiveOrPaused ? Math.min(100, Math.max(0, (maxDdVal / 25.0) * 100)) : 0}
                     color="#ff453a"
                     glowColor="rgba(255, 69, 58, 0.6)"
                     icon={<LucideIcons.ShieldAlert size={isMaximized ? 22 : 15} strokeWidth={2.5} />}
@@ -609,9 +610,9 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                   {/* Sortino Gauge */}
                   <MiniRadialGauge
                     label="Sortino"
-                    value={sortinoVal.toFixed(2)}
+                    value={isActiveOrPaused ? sortinoVal.toFixed(2) : '--'}
                     sublabel="Downside Alpha"
-                    percentage={Math.min(100, Math.max(0, (sortinoVal / 5.0) * 100))}
+                    percentage={isActiveOrPaused ? Math.min(100, Math.max(0, (sortinoVal / 5.0) * 100)) : 0}
                     color="#00c7be"
                     glowColor="rgba(0, 199, 190, 0.6)"
                     icon={<LucideIcons.Zap size={isMaximized ? 22 : 15} strokeWidth={2.5} />}
@@ -621,9 +622,9 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                   {/* Trades Gauge */}
                   <MiniRadialGauge
                     label="Trades"
-                    value={totalTradesVal}
-                    sublabel={`${currentTelemetry.winningTrades}W / ${currentTelemetry.losingTrades}L (${winRateVal.toFixed(0)}%)`}
-                    percentage={Math.min(100, Math.max(0, winRateVal))}
+                    value={isActiveOrPaused ? totalTradesVal : '--'}
+                    sublabel={isActiveOrPaused ? `${currentTelemetry.winningTrades}W / ${currentTelemetry.losingTrades}L (${winRateVal.toFixed(0)}%)` : 'Standby'}
+                    percentage={isActiveOrPaused ? Math.min(100, Math.max(0, winRateVal)) : 0}
                     color="#bf5af2"
                     glowColor="rgba(191, 90, 242, 0.6)"
                     icon={<LucideIcons.Activity size={isMaximized ? 22 : 15} strokeWidth={2.5} />}
@@ -672,7 +673,7 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
 
                 {/* RL Reward Area Chart */}
                 <div className="flex-1 w-full min-h-0 z-10 relative">
-                  {rewardData.length === 0 ? (
+                  {isStandby || rewardData.length === 0 ? (
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center gap-2 select-none">
                       <div className={`text-xs font-medium flex items-center justify-center gap-2 ${isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}`}>
                         <div className="w-1.5 h-1.5 rounded-full bg-[#30d158]/80 animate-pulse" />
@@ -776,7 +777,7 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
               </div>
 
               <div className="flex-1 w-full min-h-0 relative">
-                {(!isRunning && currentTelemetry.episodes === 0) || lossData.length === 0 ? (
+                {isStandby || lossData.length === 0 ? (
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center gap-2 select-none">
                     <div className={`text-xs font-medium flex items-center justify-center gap-2 ${isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}`}>
                       <div className="w-1.5 h-1.5 rounded-full bg-[#30d158]/80 animate-pulse" />
@@ -853,7 +854,7 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                 Relative Feature Gain Importance Matrix
               </div>
               <div className="flex-1 w-full min-h-0 relative">
-                {(!isRunning && currentTelemetry.episodes === 0) || rewardData.length === 0 ? (
+                {isStandby || rewardData.length === 0 ? (
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center gap-2 select-none">
                     <div className={`text-xs font-medium flex items-center justify-center gap-2 ${isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}`}>
                       <div className="w-1.5 h-1.5 rounded-full bg-[#30d158]/80 animate-pulse" />
@@ -912,9 +913,9 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                   {/* Ruin Probability */}
                   <MiniRadialGauge
                     label="P(Ruin)"
-                    value={isRunning ? `${currentTelemetry.ruinProbability.toFixed(1)}%` : '--'}
+                    value={isActiveOrPaused ? `${currentTelemetry.ruinProbability.toFixed(1)}%` : '--'}
                     sublabel={currentTelemetry.ruinProbability < 2.0 ? 'Tier-1 Safe' : 'Elevated Risk'}
-                    percentage={isRunning ? Math.min(100, currentTelemetry.ruinProbability * 10) : 0}
+                    percentage={isActiveOrPaused ? Math.min(100, currentTelemetry.ruinProbability * 10) : 0}
                     color={currentTelemetry.ruinProbability < 2.0 ? '#30d158' : '#ff453a'}
                     glowColor={currentTelemetry.ruinProbability < 2.0 ? 'rgba(48, 209, 88, 0.6)' : 'rgba(255, 69, 58, 0.6)'}
                     icon={<LucideIcons.ShieldCheck size={16} strokeWidth={2.5} />}
@@ -924,9 +925,9 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                   {/* 99th Percentile Worst-Case Drawdown */}
                   <MiniRadialGauge
                     label="Worst DD (99%)"
-                    value={isRunning ? `-${currentTelemetry.worstCaseDrawdown.toFixed(1)}%` : '--'}
+                    value={isActiveOrPaused ? `-${currentTelemetry.worstCaseDrawdown.toFixed(1)}%` : '--'}
                     sublabel="Simulated Max"
-                    percentage={isRunning ? Math.min(100, (currentTelemetry.worstCaseDrawdown / 15.0) * 100) : 0}
+                    percentage={isActiveOrPaused ? Math.min(100, (currentTelemetry.worstCaseDrawdown / 15.0) * 100) : 0}
                     color="#ffd60a"
                     glowColor="rgba(255, 214, 10, 0.6)"
                     icon={<LucideIcons.AlertTriangle size={16} strokeWidth={2.5} />}
@@ -936,9 +937,9 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                   {/* Out-of-Sample Efficiency */}
                   <MiniRadialGauge
                     label="OOS Sharpe"
-                    value={isRunning ? `${currentTelemetry.oosSharpe.toFixed(2)}x` : '--'}
+                    value={isActiveOrPaused ? `${currentTelemetry.oosSharpe.toFixed(2)}x` : '--'}
                     sublabel="Forward Quality"
-                    percentage={isRunning ? Math.min(100, (currentTelemetry.oosSharpe / 2.0) * 100) : 0}
+                    percentage={isActiveOrPaused ? Math.min(100, (currentTelemetry.oosSharpe / 2.0) * 100) : 0}
                     color="#00c7be"
                     glowColor="rgba(0, 199, 190, 0.6)"
                     icon={<LucideIcons.CheckCircle2 size={16} strokeWidth={2.5} />}
@@ -948,9 +949,9 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                   {/* Dynamic Lot Monitor */}
                   <MiniRadialGauge
                     label="Dynamic Lot"
-                    value={isRunning ? `${currentTelemetry.currentLotSize.toFixed(2)}` : '--'}
+                    value={isActiveOrPaused ? `${currentTelemetry.currentLotSize.toFixed(2)}` : '--'}
                     sublabel="ATR Sized"
-                    percentage={isRunning ? Math.min(100, (currentTelemetry.currentLotSize / 1.0) * 100) : 0}
+                    percentage={isActiveOrPaused ? Math.min(100, (currentTelemetry.currentLotSize / 1.0) * 100) : 0}
                     color="#bf5af2"
                     glowColor="rgba(191, 90, 242, 0.6)"
                     icon={<LucideIcons.Layers size={16} strokeWidth={2.5} />}
@@ -997,7 +998,7 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                       <strong className={`tabular-nums font-semibold ${
                         isLight ? 'text-[#28cd41]' : 'text-[#30d158] drop-shadow-[0_0_6px_rgba(48,209,88,0.4)]'
                       }`}>
-                        {isRunning ? `+$${currentTelemetry.monteCarloMedianPnL.toLocaleString()}` : '--'}
+                        {isActiveOrPaused ? `+$${currentTelemetry.monteCarloMedianPnL.toLocaleString()}` : '--'}
                       </strong>
                     </div>
                   </div>
@@ -1005,7 +1006,7 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
 
                 {/* Monte Carlo Fan Chart */}
                 <div className="flex-1 w-full min-h-0 z-10 relative">
-                  {(!isRunning && currentTelemetry.episodes === 0) || rewardData.length === 0 ? (
+                  {isStandby || rewardData.length === 0 ? (
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center gap-2 select-none">
                       <div className={`text-xs font-medium flex items-center justify-center gap-2 ${isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}`}>
                         <div className="w-1.5 h-1.5 rounded-full bg-[#30d158]/80 animate-pulse" />

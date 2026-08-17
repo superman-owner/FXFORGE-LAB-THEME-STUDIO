@@ -232,6 +232,7 @@ function AppContent() {
       <AnalyticsDrawer
         logs={logs}
         isRunning={rlStatus === 'running'}
+        rlStatus={rlStatus}
         rlTelemetry={rlTelemetry}
         latestStep={rlLatestStep}
       />
