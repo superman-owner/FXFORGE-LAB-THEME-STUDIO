@@ -968,13 +968,14 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                       </span>
                     </div>
 
-                    <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${
-                      isLight 
-                        ? 'bg-[#30d158]/10 text-[#28cd41] border-[#28cd41]/20' 
-                        : 'bg-[#30d158]/10 text-[#30d158] border-[#30d158]/30'
-                    }`}>
-                      Median PnL: +${currentTelemetry.monteCarloMedianPnL.toLocaleString()}
-                    </span>
+                    <div className="flex items-center gap-1.5 text-[11px] select-none">
+                      <span className={isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}>Median PnL:</span>
+                      <strong className={`tabular-nums font-semibold ${
+                        isLight ? 'text-[#28cd41]' : 'text-[#30d158] drop-shadow-[0_0_6px_rgba(48,209,88,0.4)]'
+                      }`}>
+                        +${currentTelemetry.monteCarloMedianPnL.toLocaleString()}
+                      </strong>
+                    </div>
                   </div>
                 </div>
 
