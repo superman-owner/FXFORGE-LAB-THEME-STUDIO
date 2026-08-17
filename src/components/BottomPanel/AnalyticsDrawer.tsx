@@ -775,54 +775,66 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                 </div>
               </div>
 
-              <div className="flex-1 w-full min-h-0">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={lossData} margin={{ top: 8, right: 10, left: -20, bottom: 6 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.04)'} />
-                    <XAxis dataKey="epoch" stroke={isLight ? '#6e6e73' : '#636366'} tick={{ fontSize: isMaximized ? 11 : 9 }} />
-                    <YAxis yAxisId="left" stroke={isLight ? '#6e6e73' : '#636366'} tick={{ fontSize: isMaximized ? 11 : 9 }} />
-                    <YAxis
-                      yAxisId="right"
-                      orientation="right"
-                      stroke="#ff9f0a"
-                      tick={{ fontSize: isMaximized ? 11 : 9 }}
-                      domain={[0.4, 0.8]}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: isLight ? 'rgba(255, 255, 255, 0.96)' : 'rgba(14, 14, 20, 0.95)',
-                        borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.12)',
-                        color: isLight ? '#1d1d1f' : '#ffffff',
-                        fontSize: isMaximized ? '12px' : '11px',
-                        borderRadius: '16px',
-                      }}
-                    />
-                    <Line
-                      yAxisId="left"
-                      type="monotone"
-                      dataKey="trainLoss"
-                      stroke="#00c7be"
-                      strokeWidth={isMaximized ? 2.5 : 1.8}
-                      dot={false}
-                    />
-                    <Line
-                      yAxisId="left"
-                      type="monotone"
-                      dataKey="valLoss"
-                      stroke="#af52de"
-                      strokeWidth={isMaximized ? 2.5 : 1.8}
-                      dot={false}
-                    />
-                    <Line
-                      yAxisId="right"
-                      type="monotone"
-                      dataKey="metricValue"
-                      stroke="#ff9f0a"
-                      strokeWidth={isMaximized ? 2.5 : 1.8}
-                      dot={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+              <div className="flex-1 w-full min-h-0 relative">
+                {(!isRunning && currentTelemetry.episodes === 0) || lossData.length === 0 ? (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center gap-2 select-none">
+                    <div className={`text-xs font-medium flex items-center justify-center gap-2 ${isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}`}>
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#30d158]/80 animate-pulse" />
+                      <span className="tracking-tight">Simulation Standby · Baseline Cleared</span>
+                    </div>
+                    <div className={`text-[11px] ${isLight ? 'text-black/40' : 'text-white/35'}`}>
+                      Click <span className={`font-semibold ${isLight ? 'text-[#28cd41]' : 'text-[#30d158]'}`}>START</span> in the top navigation to begin live Deep RL training.
+                    </div>
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={lossData} margin={{ top: 8, right: 10, left: -20, bottom: 6 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke={isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.04)'} />
+                      <XAxis dataKey="epoch" stroke={isLight ? '#6e6e73' : '#636366'} tick={{ fontSize: isMaximized ? 11 : 9 }} />
+                      <YAxis yAxisId="left" stroke={isLight ? '#6e6e73' : '#636366'} tick={{ fontSize: isMaximized ? 11 : 9 }} />
+                      <YAxis
+                        yAxisId="right"
+                        orientation="right"
+                        stroke="#ff9f0a"
+                        tick={{ fontSize: isMaximized ? 11 : 9 }}
+                        domain={[0.4, 0.8]}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: isLight ? 'rgba(255, 255, 255, 0.96)' : 'rgba(14, 14, 20, 0.95)',
+                          borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.12)',
+                          color: isLight ? '#1d1d1f' : '#ffffff',
+                          fontSize: isMaximized ? '12px' : '11px',
+                          borderRadius: '16px',
+                        }}
+                      />
+                      <Line
+                        yAxisId="left"
+                        type="monotone"
+                        dataKey="trainLoss"
+                        stroke="#00c7be"
+                        strokeWidth={isMaximized ? 2.5 : 1.8}
+                        dot={false}
+                      />
+                      <Line
+                        yAxisId="left"
+                        type="monotone"
+                        dataKey="valLoss"
+                        stroke="#af52de"
+                        strokeWidth={isMaximized ? 2.5 : 1.8}
+                        dot={false}
+                      />
+                      <Line
+                        yAxisId="right"
+                        type="monotone"
+                        dataKey="metricValue"
+                        stroke="#ff9f0a"
+                        strokeWidth={isMaximized ? 2.5 : 1.8}
+                        dot={false}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                )}
               </div>
             </div>
           )}
@@ -840,35 +852,47 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
               <div className={`px-1 mb-2 text-xs font-bold flex-shrink-0 ${isLight ? 'text-[#1d1d1f]' : 'text-white'}`}>
                 Relative Feature Gain Importance Matrix
               </div>
-              <div className="flex-1 w-full min-h-0">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={featureImportance}
-                    layout="vertical"
-                    margin={{ top: 8, right: 20, left: 60, bottom: 6 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" stroke={isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.04)'} />
-                    <XAxis type="number" stroke={isLight ? '#6e6e73' : '#636366'} tick={{ fontSize: isMaximized ? 11 : 9 }} />
-                    <YAxis
-                      type="category"
-                      dataKey="feature"
-                      stroke={isLight ? '#1d1d1f' : '#d1d1d6'}
-                      tick={{ fontSize: isMaximized ? 11 : 9 }}
-                      width={120}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: isLight ? 'rgba(255, 255, 255, 0.96)' : 'rgba(14, 14, 20, 0.95)',
-                        borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.12)',
-                        color: isLight ? '#1d1d1f' : '#ffffff',
-                        fontSize: isMaximized ? '12px' : '11px',
-                        borderRadius: '16px',
-                      }}
-                      formatter={(val: any) => [`${(Number(val) * 100).toFixed(1)}% Gain`, 'Importance']}
-                    />
-                    <Bar dataKey="importance" fill="#ff9f0a" radius={[0, 6, 6, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+              <div className="flex-1 w-full min-h-0 relative">
+                {(!isRunning && currentTelemetry.episodes === 0) || rewardData.length === 0 ? (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center gap-2 select-none">
+                    <div className={`text-xs font-medium flex items-center justify-center gap-2 ${isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}`}>
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#30d158]/80 animate-pulse" />
+                      <span className="tracking-tight">Simulation Standby · Baseline Cleared</span>
+                    </div>
+                    <div className={`text-[11px] ${isLight ? 'text-black/40' : 'text-white/35'}`}>
+                      Click <span className={`font-semibold ${isLight ? 'text-[#28cd41]' : 'text-[#30d158]'}`}>START</span> in the top navigation to begin live Deep RL training.
+                    </div>
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={featureImportance}
+                      layout="vertical"
+                      margin={{ top: 8, right: 20, left: 60, bottom: 6 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke={isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.04)'} />
+                      <XAxis type="number" stroke={isLight ? '#6e6e73' : '#636366'} tick={{ fontSize: isMaximized ? 11 : 9 }} />
+                      <YAxis
+                        type="category"
+                        dataKey="feature"
+                        stroke={isLight ? '#1d1d1f' : '#d1d1d6'}
+                        tick={{ fontSize: isMaximized ? 11 : 9 }}
+                        width={120}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: isLight ? 'rgba(255, 255, 255, 0.96)' : 'rgba(14, 14, 20, 0.95)',
+                          borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.12)',
+                          color: isLight ? '#1d1d1f' : '#ffffff',
+                          fontSize: isMaximized ? '12px' : '11px',
+                          borderRadius: '16px',
+                        }}
+                        formatter={(val: any) => [`${(Number(val) * 100).toFixed(1)}% Gain`, 'Importance']}
+                      />
+                      <Bar dataKey="importance" fill="#ff9f0a" radius={[0, 6, 6, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
               </div>
             </div>
           )}
@@ -888,9 +912,9 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                   {/* Ruin Probability */}
                   <MiniRadialGauge
                     label="P(Ruin)"
-                    value={`${currentTelemetry.ruinProbability.toFixed(1)}%`}
+                    value={isRunning ? `${currentTelemetry.ruinProbability.toFixed(1)}%` : '--'}
                     sublabel={currentTelemetry.ruinProbability < 2.0 ? 'Tier-1 Safe' : 'Elevated Risk'}
-                    percentage={Math.min(100, currentTelemetry.ruinProbability * 10)}
+                    percentage={isRunning ? Math.min(100, currentTelemetry.ruinProbability * 10) : 0}
                     color={currentTelemetry.ruinProbability < 2.0 ? '#30d158' : '#ff453a'}
                     glowColor={currentTelemetry.ruinProbability < 2.0 ? 'rgba(48, 209, 88, 0.6)' : 'rgba(255, 69, 58, 0.6)'}
                     icon={<LucideIcons.ShieldCheck size={16} strokeWidth={2.5} />}
@@ -900,9 +924,9 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                   {/* 99th Percentile Worst-Case Drawdown */}
                   <MiniRadialGauge
                     label="Worst DD (99%)"
-                    value={`-${currentTelemetry.worstCaseDrawdown.toFixed(1)}%`}
+                    value={isRunning ? `-${currentTelemetry.worstCaseDrawdown.toFixed(1)}%` : '--'}
                     sublabel="Simulated Max"
-                    percentage={Math.min(100, (currentTelemetry.worstCaseDrawdown / 15.0) * 100)}
+                    percentage={isRunning ? Math.min(100, (currentTelemetry.worstCaseDrawdown / 15.0) * 100) : 0}
                     color="#ffd60a"
                     glowColor="rgba(255, 214, 10, 0.6)"
                     icon={<LucideIcons.AlertTriangle size={16} strokeWidth={2.5} />}
@@ -912,9 +936,9 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                   {/* Out-of-Sample Efficiency */}
                   <MiniRadialGauge
                     label="OOS Sharpe"
-                    value={`${currentTelemetry.oosSharpe.toFixed(2)}x`}
+                    value={isRunning ? `${currentTelemetry.oosSharpe.toFixed(2)}x` : '--'}
                     sublabel="Forward Quality"
-                    percentage={Math.min(100, (currentTelemetry.oosSharpe / 2.0) * 100)}
+                    percentage={isRunning ? Math.min(100, (currentTelemetry.oosSharpe / 2.0) * 100) : 0}
                     color="#00c7be"
                     glowColor="rgba(0, 199, 190, 0.6)"
                     icon={<LucideIcons.CheckCircle2 size={16} strokeWidth={2.5} />}
@@ -924,9 +948,9 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                   {/* Dynamic Lot Monitor */}
                   <MiniRadialGauge
                     label="Dynamic Lot"
-                    value={`${currentTelemetry.currentLotSize.toFixed(2)}`}
+                    value={isRunning ? `${currentTelemetry.currentLotSize.toFixed(2)}` : '--'}
                     sublabel="ATR Sized"
-                    percentage={Math.min(100, (currentTelemetry.currentLotSize / 1.0) * 100)}
+                    percentage={isRunning ? Math.min(100, (currentTelemetry.currentLotSize / 1.0) * 100) : 0}
                     color="#bf5af2"
                     glowColor="rgba(191, 90, 242, 0.6)"
                     icon={<LucideIcons.Layers size={16} strokeWidth={2.5} />}
@@ -973,7 +997,7 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                       <strong className={`tabular-nums font-semibold ${
                         isLight ? 'text-[#28cd41]' : 'text-[#30d158] drop-shadow-[0_0_6px_rgba(48,209,88,0.4)]'
                       }`}>
-                        +${currentTelemetry.monteCarloMedianPnL.toLocaleString()}
+                        {isRunning ? `+$${currentTelemetry.monteCarloMedianPnL.toLocaleString()}` : '--'}
                       </strong>
                     </div>
                   </div>
@@ -981,7 +1005,18 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
 
                 {/* Monte Carlo Fan Chart */}
                 <div className="flex-1 w-full min-h-0 z-10 relative">
-                  <ResponsiveContainer width="100%" height="100%">
+                  {(!isRunning && currentTelemetry.episodes === 0) || rewardData.length === 0 ? (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center gap-2 select-none">
+                      <div className={`text-xs font-medium flex items-center justify-center gap-2 ${isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}`}>
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#30d158]/80 animate-pulse" />
+                        <span className="tracking-tight">Simulation Standby · Baseline Cleared</span>
+                      </div>
+                      <div className={`text-[11px] ${isLight ? 'text-black/40' : 'text-white/35'}`}>
+                        Click <span className={`font-semibold ${isLight ? 'text-[#28cd41]' : 'text-[#30d158]'}`}>START</span> in the top navigation to begin live Deep RL training.
+                      </div>
+                    </div>
+                  ) : (
+                    <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={monteCarloData} margin={{ top: 8, right: 12, left: 5, bottom: 4 }}>
                       <defs>
                         <linearGradient id="mcConeGrad" x1="0" y1="0" x2="0" y2="1">
@@ -1105,6 +1140,7 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                       />
                     </AreaChart>
                   </ResponsiveContainer>
+                )}
                 </div>
               </div>
             </div>
