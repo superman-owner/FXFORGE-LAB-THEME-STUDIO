@@ -313,7 +313,7 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                 : 'text-white/50 hover:text-white font-medium'
             }`}
           >
-            <span className="whitespace-nowrap">MT5 Experts Journal ({logs.length})</span>
+            <span className="whitespace-nowrap">MT5 Experts Journal</span>
           </button>
         </div>
 
