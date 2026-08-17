@@ -896,6 +896,15 @@ export class FXForgeEngine {
     this.currentEquity = this.initialCapital * (1 + data.cum_return / 100.0);
     if (this.currentEquity > this.peakEquity) this.peakEquity = this.currentEquity;
 
+    // Record real policy return step into trade returns distribution for live Monte Carlo resampling
+    const episodeReturn = ((data.cum_return / Math.max(1, data.trades)) * 0.1) / 100.0;
+    this.tradeReturns.push(episodeReturn);
+    if (this.tradeReturns.length > 200) this.tradeReturns.shift();
+    if (episodeReturn < 0) {
+      this.downsideReturns.push(episodeReturn);
+      if (this.downsideReturns.length > 200) this.downsideReturns.shift();
+    }
+
     // Moving average of reward
     const recentRewards = this.history.slice(-9).map((h) => h.cumulativeReward);
     recentRewards.push(Number(data.reward.toFixed(2)));
