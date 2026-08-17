@@ -556,8 +556,14 @@ def main():
         }
         print(json.dumps(progress_payload), flush=True)
 
-        # Interactive Pacing for smooth UI animation & real-time telemetry observation
-        time.sleep(0.025)
+        # Smooth interactive pacing so the UI clearly animates 1, 2, 3, 4, 5... sequentially
+        sys.stdout.flush()
+        if ep <= 25:
+            time.sleep(0.085)
+        elif ep <= 100:
+            time.sleep(0.040)
+        else:
+            time.sleep(0.015)
 
     # Export Model
     export_standalone_onnx_to_mt5(model, state_dim=6, export_name="rl_trading_model.onnx")

@@ -980,8 +980,8 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <div className="hidden sm:flex items-center gap-3 text-[10.5px]">
+                  <div className="flex items-center gap-4 flex-shrink-0 min-w-max mr-1">
+                    <div className="hidden sm:flex items-center gap-3 text-[10.5px] flex-shrink-0">
                       <span className="flex items-center gap-1 text-[#30d158]">
                         <span className="w-2 h-0.5 bg-[#30d158]" /> 95% Bull Frontier
                       </span>
@@ -993,12 +993,22 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1.5 text-[11px] select-none">
-                      <span className={isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}>Median PnL:</span>
-                      <strong className={`tabular-nums font-semibold ${
-                        isLight ? 'text-[#28cd41]' : 'text-[#30d158] drop-shadow-[0_0_6px_rgba(48,209,88,0.4)]'
-                      }`}>
-                        {isActiveOrPaused ? `+$${currentTelemetry.monteCarloMedianPnL.toLocaleString()}` : '--'}
+                    <div className="flex items-center gap-1.5 text-[11px] select-none w-[130px] justify-end flex-shrink-0">
+                      <span className={`whitespace-nowrap flex-shrink-0 ${isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}`}>Median PnL:</span>
+                      <strong
+                        className={`font-sans tabular-nums font-semibold inline-block w-[55px] text-right whitespace-nowrap flex-shrink-0 ${
+                          !isActiveOrPaused
+                            ? (isLight ? 'text-[#86868b]' : 'text-[#86868b]')
+                            : currentTelemetry.monteCarloMedianPnL >= 0
+                            ? (isLight ? 'text-[#28cd41]' : 'text-[#30d158] drop-shadow-[0_0_6px_rgba(48,209,88,0.4)]')
+                            : (isLight ? 'text-[#ff3b30]' : 'text-[#ff453a] drop-shadow-[0_0_6px_rgba(255,69,58,0.4)]')
+                        }`}
+                      >
+                        {!isActiveOrPaused
+                          ? '--'
+                          : currentTelemetry.monteCarloMedianPnL >= 0
+                          ? `+$${currentTelemetry.monteCarloMedianPnL.toLocaleString()}`
+                          : `-$${Math.abs(currentTelemetry.monteCarloMedianPnL).toLocaleString()}`}
                       </strong>
                     </div>
                   </div>

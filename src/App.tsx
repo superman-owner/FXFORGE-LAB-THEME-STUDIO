@@ -119,6 +119,11 @@ function AppContent() {
 
   const handleStartRL = useCallback(() => {
     console.log('[DEBUG-RL] handleStartRL invoked! Changing rlStatus to running.');
+    if (rlStatus === 'stopped') {
+      fxforgeEngine.reset();
+      setRlTelemetry(fxforgeEngine.getTelemetry());
+      setRlLatestStep(null);
+    }
     setRlStatus('running');
     setLogs((prev) => [
       ...prev,
