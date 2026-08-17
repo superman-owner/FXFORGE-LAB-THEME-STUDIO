@@ -463,7 +463,7 @@ export const AnalyticsDrawer: React.FC<AnalyticsDrawerProps> = ({
                       >
                         {totalReturnPct >= 0 ? `+${totalReturnPct.toFixed(1)}` : totalReturnPct.toFixed(1)}
                         <span
-                          className={`font-bold ml-0.5 ${
+                          className={`font-bold ml-1.5 inline-block ${
                             totalReturnPct >= 0 ? (isLight ? 'text-[#28cd41]' : 'text-[#30d158]') : 'text-[#ff453a]'
                           } ${isMaximized ? 'text-2xl' : 'text-base'}`}
                         >
