@@ -118,7 +118,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onNewProject?.();
                 }}
-                style={{ paddingLeft: '20px', paddingRight: '10px', paddingTop: '3.5px', paddingBottom: '3.5px' }}
+                style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '3.5px', paddingBottom: '3.5px' }}
                 className={`group w-full rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
@@ -137,7 +137,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onOpenProjectManager?.();
                 }}
-                style={{ paddingLeft: '20px', paddingRight: '10px', paddingTop: '3.5px', paddingBottom: '3.5px' }}
+                style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '3.5px', paddingBottom: '3.5px' }}
                 className={`group w-full rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
@@ -156,7 +156,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onOpenSaveProject?.();
                 }}
-                style={{ paddingLeft: '20px', paddingRight: '10px', paddingTop: '3.5px', paddingBottom: '3.5px' }}
+                style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '3.5px', paddingBottom: '3.5px' }}
                 className={`group w-full rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
@@ -177,7 +177,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onImportProject?.();
                 }}
-                style={{ paddingLeft: '20px', paddingRight: '10px', paddingTop: '3.5px', paddingBottom: '3.5px' }}
+                style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '3.5px', paddingBottom: '3.5px' }}
                 className={`group w-full rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
@@ -196,7 +196,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onExportProject?.();
                 }}
-                style={{ paddingLeft: '20px', paddingRight: '10px', paddingTop: '3.5px', paddingBottom: '3.5px' }}
+                style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '3.5px', paddingBottom: '3.5px' }}
                 className={`group w-full rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
