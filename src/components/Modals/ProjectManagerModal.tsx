@@ -130,65 +130,116 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
   return (
     <div
       style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 9999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '24px',
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
         fontFamily:
           '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-xl animate-in fade-in duration-200"
     >
       <div
-        className={`w-full max-w-5xl h-[600px] max-h-[90vh] rounded-2xl border shadow-2xl flex flex-col overflow-hidden transition-all duration-200 ${
-          isLight
-            ? 'bg-[#ffffff]/98 border-black/10 text-[#1d1d1f] shadow-[0_25px_70px_rgba(0,0,0,0.18)]'
-            : 'bg-[#14141c]/98 border-white/12 text-white shadow-[0_30px_90px_rgba(0,0,0,0.85)] backdrop-blur-3xl'
-        }`}
+        style={{
+          width: '100%',
+          maxWidth: '980px',
+          height: '600px',
+          maxHeight: '90vh',
+          borderRadius: '16px',
+          border: isLight ? '1px solid rgba(0, 0, 0, 0.12)' : '1px solid rgba(255, 255, 255, 0.14)',
+          backgroundColor: isLight ? '#ffffff' : '#14141c',
+          boxShadow: isLight ? '0 25px 70px rgba(0,0,0,0.18)' : '0 30px 90px rgba(0,0,0,0.85)',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          boxSizing: 'border-box',
+        }}
       >
-        {/*  Header Bar (Balanced 10px+ padding on all 4 edges) */}
+        {/*  Header Bar (Direct Inline Styles with 24px padding) */}
         <div
-          className={`px-6 py-4 border-b flex items-center justify-between flex-shrink-0 ${
-            isLight ? 'border-black/[0.08] bg-black/[0.02]' : 'border-white/[0.08] bg-white/[0.02]'
-          }`}
+          style={{
+            padding: '16px 24px',
+            borderBottom: isLight ? '1px solid rgba(0, 0, 0, 0.08)' : '1px solid rgba(255, 255, 255, 0.08)',
+            backgroundColor: isLight ? 'rgba(0, 0, 0, 0.02)' : 'rgba(255, 255, 255, 0.02)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexShrink: 0,
+            boxSizing: 'border-box',
+          }}
         >
-          <div className="flex items-center gap-3.5">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                isLight ? 'bg-[#0071e3]/10 text-[#0071e3]' : 'bg-[#007aff]/15 text-[#007aff]'
-              }`}
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: isLight ? 'rgba(0, 113, 227, 0.1)' : 'rgba(0, 122, 255, 0.15)',
+                color: isLight ? '#0071e3' : '#007aff',
+                flexShrink: 0,
+              }}
             >
               <LucideIcons.FolderKanban size={22} strokeWidth={2.2} />
             </div>
             <div>
-              <div className="flex items-center gap-2.5">
-                <h2 className="text-[15px] font-bold tracking-tight">Load Project</h2>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <h2 style={{ fontSize: '15px', fontWeight: 700, margin: 0, color: isLight ? '#1d1d1f' : '#ffffff' }}>
+                  Load Project
+                </h2>
                 <span
-                  className={`text-[11px] px-2.5 py-0.5 rounded-full font-medium tracking-tight ${
-                    isLight ? 'bg-black/5 text-[#6e6e73]' : 'bg-white/10 text-white/70'
-                  }`}
+                  style={{
+                    fontSize: '11px',
+                    padding: '2px 10px',
+                    borderRadius: '999px',
+                    fontWeight: 500,
+                    backgroundColor: isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.1)',
+                    color: isLight ? '#6e6e73' : 'rgba(255, 255, 255, 0.7)',
+                  }}
                 >
                   {projects.length} Strategies
                 </span>
               </div>
-              <p className={`text-[12px] mt-0.5 ${isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}`}>
+              <p style={{ fontSize: '12px', margin: '2px 0 0 0', color: isLight ? '#6e6e73' : '#86868b' }}>
                 Manage, load, duplicate, import and export your Quant DAG pipelines (FxDreema Studio Engine)
               </p>
             </div>
           </div>
 
           {/* Action Toolbar & Close Button */}
-          <div className="flex items-center gap-2.5">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <input
               type="file"
               ref={fileInputRef}
               onChange={handleFileImport}
               accept=".json,.xml"
-              className="hidden"
+              style={{ display: 'none' }}
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
-                isLight
-                  ? 'border-black/10 bg-white hover:bg-black/5 text-[#1d1d1f] shadow-sm'
-                  : 'border-white/12 bg-white/5 hover:bg-white/10 text-white'
-              }`}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '8px',
+                fontSize: '12px',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                cursor: 'pointer',
+                border: isLight ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255,255,255,0.12)',
+                backgroundColor: isLight ? '#ffffff' : 'rgba(255,255,255,0.05)',
+                color: isLight ? '#1d1d1f' : '#ffffff',
+              }}
               title="Import Project (.json / .xml)"
             >
               <LucideIcons.Upload size={13} />
@@ -200,7 +251,20 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                 onClose();
                 onOpenSaveModal();
               }}
-              className="px-3.5 py-1.5 rounded-lg text-[12px] font-bold flex items-center gap-1.5 bg-[#007aff] hover:bg-[#0071e3] text-white shadow-[0_2px_8px_rgba(0,122,255,0.4)] cursor-pointer transition-all active:scale-95"
+              style={{
+                padding: '6px 14px',
+                borderRadius: '8px',
+                fontSize: '12px',
+                fontWeight: 700,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                cursor: 'pointer',
+                border: 'none',
+                backgroundColor: '#007aff',
+                color: '#ffffff',
+                boxShadow: '0 2px 8px rgba(0, 122, 255, 0.4)',
+              }}
             >
               <LucideIcons.Save size={13} />
               <span>Save Current Graph</span>
@@ -208,45 +272,74 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
 
             <button
               onClick={onClose}
-              className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors cursor-pointer ml-1 ${
-                isLight
-                  ? 'hover:bg-black/5 text-[#6e6e73] hover:text-[#1d1d1f]'
-                  : 'hover:bg-white/10 text-[#86868b] hover:text-white'
-              }`}
+              style={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                border: 'none',
+                backgroundColor: 'transparent',
+                color: isLight ? '#6e6e73' : '#86868b',
+                marginLeft: '4px',
+              }}
             >
               <LucideIcons.X size={16} />
             </button>
           </div>
         </div>
 
-        {/* Search Bar & Toolbar (Locked clean padding and non-overlapping input) */}
+        {/* Search Bar & Toolbar (Direct Inline Styles with 24px padding & 36px input indent) */}
         <div
-          className={`px-6 py-3 border-b flex items-center justify-between gap-4 flex-shrink-0 ${
-            isLight ? 'bg-[#f5f5f7] border-black/[0.06]' : 'bg-[#0e0e16] border-white/[0.06]'
-          }`}
+          style={{
+            padding: '12px 24px',
+            borderBottom: isLight ? '1px solid rgba(0, 0, 0, 0.06)' : '1px solid rgba(255, 255, 255, 0.06)',
+            backgroundColor: isLight ? '#f5f5f7' : '#0e0e16',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '16px',
+            flexShrink: 0,
+            boxSizing: 'border-box',
+          }}
         >
-          <div className="relative flex-1 max-w-lg">
+          <div style={{ position: 'relative', flex: 1, maxWidth: '520px' }}>
             <LucideIcons.Search
               size={14}
-              className={`absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${
-                isLight ? 'text-[#8e8e93]' : 'text-white/40'
-              }`}
+              style={{
+                position: 'absolute',
+                left: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: isLight ? '#8e8e93' : 'rgba(255, 255, 255, 0.4)',
+                pointerEvents: 'none',
+              }}
             />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by name, asset, timeframe (e.g. GRID, XAUUSD, M15)..."
-              style={{ paddingLeft: '34px', paddingRight: '14px', paddingTop: '7px', paddingBottom: '7px' }}
-              className={`w-full text-[12.5px] rounded-xl border transition-all focus:outline-none ${
-                isLight
-                  ? 'bg-white border-black/12 text-[#1d1d1f] placeholder:text-[#8e8e93] focus:border-[#0071e3] focus:ring-2 focus:ring-[#0071e3]/20'
-                  : 'bg-white/[0.07] border-white/14 text-white placeholder:text-white/40 focus:border-[#007aff] focus:bg-white/[0.10] focus:ring-2 focus:ring-[#007aff]/25'
-              }`}
+              style={{
+                width: '100%',
+                paddingLeft: '36px',
+                paddingRight: '14px',
+                paddingTop: '8px',
+                paddingBottom: '8px',
+                fontSize: '12.5px',
+                borderRadius: '10px',
+                border: isLight ? '1px solid rgba(0,0,0,0.12)' : '1px solid rgba(255,255,255,0.14)',
+                backgroundColor: isLight ? '#ffffff' : 'rgba(255,255,255,0.07)',
+                color: isLight ? '#1d1d1f' : '#ffffff',
+                outline: 'none',
+                boxSizing: 'border-box',
+              }}
             />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <button
               onClick={() => {
                 if (window.confirm('Reset canvas to a clean new blank project?')) {
@@ -254,13 +347,21 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                   onNewProject();
                 }
               }}
-              className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
-                isLight
-                  ? 'border-black/10 bg-white hover:bg-black/5 text-[#1d1d1f]'
-                  : 'border-white/12 bg-white/5 hover:bg-white/10 text-white'
-              }`}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '8px',
+                fontSize: '12px',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                cursor: 'pointer',
+                border: isLight ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255,255,255,0.12)',
+                backgroundColor: isLight ? '#ffffff' : 'rgba(255,255,255,0.05)',
+                color: isLight ? '#1d1d1f' : '#ffffff',
+              }}
             >
-              <LucideIcons.FilePlus size={13} className="text-[#30d158]" />
+              <LucideIcons.FilePlus size={13} style={{ color: '#30d158' }} />
               <span>New Blank Pipeline</span>
             </button>
           </div>
@@ -268,39 +369,66 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
 
         {/* Toast Alert */}
         {toastMessage && (
-          <div className="bg-[#30d158]/15 border-b border-[#30d158]/30 px-6 py-2 flex items-center justify-between text-[12px] text-[#30d158] font-semibold animate-in slide-in-from-top-2">
-            <div className="flex items-center gap-2">
+          <div
+            style={{
+              padding: '8px 24px',
+              borderBottom: '1px solid rgba(48, 209, 88, 0.3)',
+              backgroundColor: 'rgba(48, 209, 88, 0.15)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              fontSize: '12px',
+              fontWeight: 600,
+              color: '#30d158',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <LucideIcons.CheckCircle2 size={14} />
               <span>{toastMessage}</span>
             </div>
-            <button onClick={() => setToastMessage(null)} className="cursor-pointer hover:opacity-75">
+            <button onClick={() => setToastMessage(null)} style={{ cursor: 'pointer', background: 'none', border: 'none', color: '#30d158' }}>
               <LucideIcons.X size={12} />
             </button>
           </div>
         )}
 
-        {/*  Streamlined Projects Table (Flex-1 Locked Scroll Container) */}
-        <div className="flex-1 overflow-y-auto min-h-0 flex flex-col">
-          <table className="w-full text-left text-[12px] border-collapse flex-1">
+        {/*  Streamlined Projects Table (Flex-1 Locked Scroll Container with Direct Inline Styles) */}
+        <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '12px', flex: 1 }}>
             <thead
-              className={`sticky top-0 z-10 select-none ${
-                isLight ? 'bg-[#f5f5f7] text-[#6e6e73]' : 'bg-[#101018] text-[#86868b]'
-              }`}
+              style={{
+                position: 'sticky',
+                top: 0,
+                zIndex: 10,
+                userSelect: 'none',
+                backgroundColor: isLight ? '#f5f5f7' : '#101018',
+                borderBottom: isLight ? '1px solid rgba(0, 0, 0, 0.08)' : '1px solid rgba(255, 255, 255, 0.08)',
+              }}
             >
-              <tr className="border-b border-black/[0.08] dark:border-white/[0.08]">
-                <th className="py-3.5 px-6 font-semibold whitespace-nowrap">Project Name & Description</th>
-                <th className="py-3.5 px-4 font-semibold w-[160px] whitespace-nowrap">Created</th>
-                <th className="py-3.5 px-4 font-semibold w-[160px] whitespace-nowrap">Modified</th>
-                <th className="py-3.5 px-6 font-semibold w-[170px] text-right whitespace-nowrap">Action & Manage</th>
+              <tr>
+                <th style={{ padding: '14px 24px', fontWeight: 600, whiteSpace: 'nowrap', color: isLight ? '#6e6e73' : '#86868b' }}>
+                  Project Name & Description
+                </th>
+                <th style={{ padding: '14px 16px', fontWeight: 600, width: '160px', whiteSpace: 'nowrap', color: isLight ? '#6e6e73' : '#86868b' }}>
+                  Created
+                </th>
+                <th style={{ padding: '14px 16px', fontWeight: 600, width: '160px', whiteSpace: 'nowrap', color: isLight ? '#6e6e73' : '#86868b' }}>
+                  Modified
+                </th>
+                <th style={{ padding: '14px 24px', fontWeight: 600, width: '170px', textAlign: 'right', whiteSpace: 'nowrap', color: isLight ? '#6e6e73' : '#86868b' }}>
+                  Action & Manage
+                </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-black/[0.04] dark:divide-white/[0.04]">
+            <tbody>
               {filteredProjects.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="py-24 px-6 text-center text-[#86868b]">
-                    <LucideIcons.FolderSearch size={48} className="mx-auto mb-3 opacity-30 text-[#86868b]" />
-                    <p className="font-bold text-[14px]">No Saved Projects Yet</p>
-                    <p className="text-[12.5px] mt-1.5 opacity-75 max-w-md mx-auto">
+                  <td colSpan={4} style={{ padding: '90px 24px', textAlign: 'center', color: '#86868b' }}>
+                    <LucideIcons.FolderSearch size={48} style={{ margin: '0 auto 12px auto', opacity: 0.3, color: '#86868b', display: 'block' }} />
+                    <p style={{ fontWeight: 700, fontSize: '14px', margin: 0, color: isLight ? '#1d1d1f' : '#ffffff' }}>
+                      No Saved Projects Yet
+                    </p>
+                    <p style={{ fontSize: '12.5px', marginTop: '6px', opacity: 0.75, maxWidth: '420px', marginLeft: 'auto', marginRight: 'auto' }}>
                       Click "Save Current Graph" above or press ⌘S to save your Quant DAG pipeline.
                     </p>
                   </td>
@@ -312,47 +440,59 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                     <tr
                       key={proj.id}
                       onClick={() => !isActive && handleLoad(proj)}
-                      className={`transition-colors group cursor-pointer ${
-                        isActive
-                          ? isLight
-                            ? 'bg-[#30d158]/10 border-l-4 border-l-[#30d158]'
-                            : 'bg-[#30d158]/10 border-l-4 border-l-[#30d158]'
-                          : isLight
-                          ? 'hover:bg-black/[0.03] border-l-4 border-l-transparent'
-                          : 'hover:bg-white/[0.03] border-l-4 border-l-transparent'
-                      }`}
+                      style={{
+                        cursor: 'pointer',
+                        transition: 'background-color 0.15s ease',
+                        borderBottom: isLight ? '1px solid rgba(0,0,0,0.04)' : '1px solid rgba(255,255,255,0.04)',
+                        backgroundColor: isActive ? 'rgba(48, 209, 88, 0.1)' : 'transparent',
+                        borderLeft: isActive ? '4px solid #30d158' : '4px solid transparent',
+                      }}
                     >
                       {/* Project Name & Description with 🟢 Green Dot */}
-                      <td className="py-3 px-5">
-                        <div className="flex items-center gap-2">
+                      <td style={{ padding: '12px 24px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                           {/* 🟢 Green Dot Active Indicator */}
                           {isActive ? (
                             <span
-                              className="w-2.5 h-2.5 rounded-full bg-[#30d158] shadow-[0_0_8px_#30d158] flex-shrink-0 animate-pulse"
+                              style={{
+                                width: '10px',
+                                height: '10px',
+                                borderRadius: '50%',
+                                backgroundColor: '#30d158',
+                                boxShadow: '0 0 8px #30d158',
+                                flexShrink: 0,
+                              }}
                               title="Currently Open Strategy"
                             />
                           ) : (
-                            <span className="w-2 h-2 rounded-full bg-white/25 flex-shrink-0" />
+                            <span
+                              style={{
+                                width: '8px',
+                                height: '8px',
+                                borderRadius: '50%',
+                                backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                                flexShrink: 0,
+                              }}
+                            />
                           )}
 
                           <span
-                            className={`font-bold text-[13px] tracking-tight ${
-                              isActive
-                                ? isLight
-                                  ? 'text-[#1d1d1f]'
-                                  : 'text-white'
-                                : isLight
-                                ? 'text-[#1d1d1f]'
-                                : 'text-white/90'
-                            }`}
+                            style={{
+                              fontWeight: 700,
+                              fontSize: '13px',
+                              color: isLight ? '#1d1d1f' : '#ffffff',
+                            }}
                           >
                             {proj.name}
                           </span>
 
                           <span
-                            className={`text-[11.5px] font-mono whitespace-nowrap ${
-                              isLight ? 'text-[#86868b]' : 'text-[#86868b]'
-                            }`}
+                            style={{
+                              fontSize: '11.5px',
+                              fontFamily: 'monospace',
+                              whiteSpace: 'nowrap',
+                              color: '#86868b',
+                            }}
                           >
                             ({proj.symbol || 'XAUUSD'} · {proj.timeframe || 'M15'})
                           </span>
@@ -360,9 +500,15 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
 
                         {proj.description && (
                           <p
-                            className={`text-[11.5px] truncate max-w-2xl mt-1 pl-4.5 ${
-                              isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'
-                            }`}
+                            style={{
+                              fontSize: '11.5px',
+                              margin: '4px 0 0 18px',
+                              color: isLight ? '#6e6e73' : '#86868b',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              maxWidth: '600px',
+                            }}
                           >
                             {proj.description}
                           </p>
@@ -370,33 +516,36 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                       </td>
 
                       {/* Created */}
-                      <td
-                        className={`py-3 px-4 text-[11.5px] whitespace-nowrap ${
-                          isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'
-                        }`}
-                      >
+                      <td style={{ padding: '12px 16px', fontSize: '11.5px', whiteSpace: 'nowrap', color: isLight ? '#6e6e73' : '#86868b' }}>
                         {proj.createdAt}
                       </td>
 
                       {/* Modified */}
-                      <td
-                        className={`py-3 px-4 text-[11.5px] whitespace-nowrap font-medium ${
-                          isLight ? 'text-[#1d1d1f]' : 'text-white/90'
-                        }`}
-                      >
+                      <td style={{ padding: '12px 16px', fontSize: '11.5px', whiteSpace: 'nowrap', fontWeight: 500, color: isLight ? '#1d1d1f' : 'rgba(255,255,255,0.9)' }}>
                         {proj.modifiedAt}
                       </td>
 
                       {/* Action & Manage */}
-                      <td className="py-3 px-5 text-right whitespace-nowrap">
+                      <td style={{ padding: '12px 24px', textAlign: 'right', whiteSpace: 'nowrap' }}>
                         <div
-                          className="flex items-center justify-end gap-2"
+                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}
                           onClick={(e) => e.stopPropagation()}
                         >
                           {!isActive && (
                             <button
                               onClick={() => handleLoad(proj)}
-                              className="px-3.5 py-1 rounded-md text-[11px] font-bold text-black bg-[#30d158] hover:bg-[#28cd41] shadow-[0_1px_4px_rgba(48,209,88,0.4)] cursor-pointer transition-all active:scale-95 mr-1"
+                              style={{
+                                padding: '4px 14px',
+                                borderRadius: '6px',
+                                fontSize: '11px',
+                                fontWeight: 700,
+                                color: '#000000',
+                                backgroundColor: '#30d158',
+                                border: 'none',
+                                cursor: 'pointer',
+                                boxShadow: '0 1px 4px rgba(48,209,88,0.4)',
+                                marginRight: '4px',
+                              }}
                             >
                               Load
                             </button>
@@ -404,11 +553,14 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
 
                           <button
                             onClick={() => handleExport(proj)}
-                            className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
-                              isLight
-                                ? 'border-black/10 hover:bg-black/5 text-[#6e6e73]'
-                                : 'border-white/12 hover:bg-white/10 text-[#86868b] hover:text-white'
-                            }`}
+                            style={{
+                              padding: '6px',
+                              borderRadius: '8px',
+                              border: isLight ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255,255,255,0.12)',
+                              backgroundColor: 'transparent',
+                              color: isLight ? '#6e6e73' : '#86868b',
+                              cursor: 'pointer',
+                            }}
                             title="Export to JSON"
                           >
                             <LucideIcons.Download size={12} />
@@ -416,11 +568,14 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
 
                           <button
                             onClick={() => handleDuplicate(proj.id)}
-                            className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
-                              isLight
-                                ? 'border-black/10 hover:bg-black/5 text-[#6e6e73]'
-                                : 'border-white/12 hover:bg-white/10 text-[#86868b] hover:text-white'
-                            }`}
+                            style={{
+                              padding: '6px',
+                              borderRadius: '8px',
+                              border: isLight ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255,255,255,0.12)',
+                              backgroundColor: 'transparent',
+                              color: isLight ? '#6e6e73' : '#86868b',
+                              cursor: 'pointer',
+                            }}
                             title="Duplicate Project"
                           >
                             <LucideIcons.Copy size={12} />
@@ -428,7 +583,14 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
 
                           <button
                             onClick={() => handleDelete(proj.id, proj.name)}
-                            className="p-1.5 rounded-lg border border-[#ff453a]/25 hover:bg-[#ff453a]/15 text-[#ff453a] transition-colors cursor-pointer"
+                            style={{
+                              padding: '6px',
+                              borderRadius: '8px',
+                              border: '1px solid rgba(255, 69, 58, 0.25)',
+                              backgroundColor: 'transparent',
+                              color: '#ff453a',
+                              cursor: 'pointer',
+                            }}
                             title="Delete Project"
                           >
                             <LucideIcons.Trash2 size={12} />
@@ -443,25 +605,35 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
           </table>
         </div>
 
-        {/* Footer Bar */}
+        {/* Footer Bar (Direct Inline Styles with 24px padding) */}
         <div
-          className={`px-6 py-3 border-t flex items-center justify-between text-[12px] flex-shrink-0 ${
-            isLight
-              ? 'bg-[#f5f5f7] border-black/[0.08] text-[#6e6e73]'
-              : 'bg-[#101018] border-white/[0.08] text-[#86868b]'
-          }`}
+          style={{
+            padding: '14px 24px',
+            borderTop: isLight ? '1px solid rgba(0, 0, 0, 0.08)' : '1px solid rgba(255, 255, 255, 0.08)',
+            backgroundColor: isLight ? '#f5f5f7' : '#101018',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            fontSize: '12px',
+            flexShrink: 0,
+            boxSizing: 'border-box',
+          }}
         >
-          <div className="flex items-center gap-2">
-            <LucideIcons.Info size={13} className="text-[#007aff]" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: isLight ? '#6e6e73' : '#86868b' }}>
+            <LucideIcons.Info size={13} style={{ color: '#007aff' }} />
             <span>Loading a project replaces all nodes, weights, and rules on the canvas.</span>
           </div>
           <button
             onClick={onClose}
-            className={`px-4 py-1.5 rounded-xl font-semibold border cursor-pointer transition-colors ${
-              isLight
-                ? 'bg-white hover:bg-black/5 border-black/10 text-[#1d1d1f]'
-                : 'bg-white/5 hover:bg-white/10 border-white/10 text-white'
-            }`}
+            style={{
+              padding: '6px 18px',
+              borderRadius: '10px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              border: isLight ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255,255,255,0.12)',
+              backgroundColor: isLight ? '#ffffff' : 'rgba(255,255,255,0.06)',
+              color: isLight ? '#1d1d1f' : '#ffffff',
+            }}
           >
             Close
           </button>
