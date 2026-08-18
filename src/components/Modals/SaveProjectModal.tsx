@@ -22,7 +22,6 @@ export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
 
   const [projectName, setProjectName] = useState('My Custom Quant Strategy');
   const [projectType, setProjectType] = useState<SavedProject['type']>('Deep RL Policy');
-  const [language, setLanguage] = useState<SavedProject['language']>('MQL5');
   const [symbol, setSymbol] = useState(architectureSpec?.symbol || 'XAUUSD');
   const [timeframe, setTimeframe] = useState(architectureSpec?.timeframe || 'M15');
   const [description, setDescription] = useState('Visual Reinforcement Learning Pipeline with Dynamic Actor-Critic NN');
@@ -40,7 +39,6 @@ export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
       {
         name: projectName.trim(),
         type: projectType,
-        language,
         symbol,
         timeframe,
         description: description.trim(),
@@ -107,49 +105,26 @@ export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
             />
           </div>
 
-          {/* Type & Language */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className={`block text-xs font-semibold mb-1.5 ${isLight ? 'text-[#1d1d1f]' : 'text-white'}`}>
-                Strategy Type
-              </label>
-              <select
-                value={projectType}
-                onChange={(e) => setProjectType(e.target.value as any)}
-                className={`w-full px-3 py-2 text-xs rounded-xl border transition-all focus:outline-none ${
-                  isLight
-                    ? 'bg-white border-black/12 text-[#1d1d1f] focus:border-[#0071e3]'
-                    : 'bg-[#1e1e28] border-white/14 text-white focus:border-[#007aff]'
-                }`}
-              >
-                <option value="Deep RL Policy">Deep RL Policy</option>
-                <option value="Grid Intelligence">Grid Intelligence</option>
-                <option value="BPNN Scalper">BPNN Scalper</option>
-                <option value="Multi-TF Matrix">Multi-TF Matrix</option>
-                <option value="Expert">Expert Advisor</option>
-                <option value="Risk Manager">Risk Manager</option>
-              </select>
-            </div>
-
-            <div>
-              <label className={`block text-xs font-semibold mb-1.5 ${isLight ? 'text-[#1d1d1f]' : 'text-white'}`}>
-                Target Language
-              </label>
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value as any)}
-                className={`w-full px-3 py-2 text-xs rounded-xl border transition-all focus:outline-none ${
-                  isLight
-                    ? 'bg-white border-black/12 text-[#1d1d1f] focus:border-[#0071e3]'
-                    : 'bg-[#1e1e28] border-white/14 text-white focus:border-[#007aff]'
-                }`}
-              >
-                <option value="MQL5">MQL5 (MetaTrader 5)</option>
-                <option value="MQL4">MQL4 (MetaTrader 4)</option>
-                <option value="PyTorch / ONNX">PyTorch / ONNX</option>
-                <option value="LightGBM">LightGBM Quant</option>
-              </select>
-            </div>
+          {/* Strategy Type */}
+          <div>
+            <label className={`block text-xs font-semibold mb-1.5 ${isLight ? 'text-[#1d1d1f]' : 'text-white'}`}>
+              Strategy Architecture Type
+            </label>
+            <select
+              value={projectType}
+              onChange={(e) => setProjectType(e.target.value as any)}
+              className={`w-full px-3 py-2 text-xs rounded-xl border transition-all focus:outline-none ${
+                isLight
+                  ? 'bg-white border-black/12 text-[#1d1d1f] focus:border-[#0071e3]'
+                  : 'bg-[#1e1e28] border-white/14 text-white focus:border-[#007aff]'
+              }`}
+            >
+              <option value="Deep RL Policy">Deep RL Policy</option>
+              <option value="Grid Intelligence">Grid Intelligence</option>
+              <option value="BPNN Scalper">BPNN Scalper</option>
+              <option value="Multi-TF Matrix">Multi-TF Matrix</option>
+              <option value="Risk Manager">Risk Manager</option>
+            </select>
           </div>
 
           {/* Symbol & Timeframe */}

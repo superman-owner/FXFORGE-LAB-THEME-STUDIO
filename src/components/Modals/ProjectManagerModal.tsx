@@ -236,7 +236,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by name, asset, language (e.g. GRID, MQL5, XAUUSD)..."
+              placeholder="Search by name, asset, timeframe (e.g. GRID, XAUUSD, M15)..."
               className={`w-full pl-9 pr-4 py-1.5 text-[12px] rounded-xl border transition-all focus:outline-none ${
                 isLight
                   ? 'bg-white border-black/12 text-[#1d1d1f] placeholder:text-[#8e8e93] focus:border-[#0071e3] focus:ring-2 focus:ring-[#0071e3]/20'
@@ -278,7 +278,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
           </div>
         )}
 
-        {/*  Streamlined Projects Table (Front columns removed, starting directly with Project Name) */}
+        {/*  Streamlined Projects Table (No Code Language, Pure AI Quant Pipeline) */}
         <div className="flex-1 overflow-y-auto min-h-0">
           <table className="w-full text-left text-[12px] border-collapse">
             <thead
@@ -346,19 +346,6 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                             }`}
                           >
                             {proj.name}
-                          </span>
-
-                          {/* Language Badge */}
-                          <span
-                            className={`text-[10.5px] px-1.5 py-0.5 rounded font-bold uppercase whitespace-nowrap ${
-                              proj.language === 'MQL5'
-                                ? 'bg-[#00c7be]/15 text-[#00c7be] border border-[#00c7be]/25'
-                                : proj.language === 'MQL4'
-                                ? 'bg-[#ffd60a]/15 text-[#ffd60a] border border-[#ffd60a]/25'
-                                : 'bg-[#af52de]/15 text-[#af52de] border border-[#af52de]/25'
-                            }`}
-                          >
-                            {proj.language}
                           </span>
 
                           {/* Type Tag */}
