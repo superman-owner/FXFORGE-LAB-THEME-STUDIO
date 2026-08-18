@@ -136,13 +136,13 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-xl animate-in fade-in duration-200"
     >
       <div
-        className={`w-full max-w-5xl max-h-[88vh] rounded-2xl border shadow-2xl flex flex-col overflow-hidden transition-all duration-200 ${
+        className={`w-full max-w-5xl h-[600px] max-h-[90vh] rounded-2xl border shadow-2xl flex flex-col overflow-hidden transition-all duration-200 ${
           isLight
             ? 'bg-[#ffffff]/98 border-black/10 text-[#1d1d1f] shadow-[0_25px_70px_rgba(0,0,0,0.18)]'
             : 'bg-[#14141c]/98 border-white/12 text-white shadow-[0_30px_90px_rgba(0,0,0,0.85)] backdrop-blur-3xl'
         }`}
       >
-        {/*  Header Bar */}
+        {/*  Header Bar (Balanced 10px+ padding on all 4 edges) */}
         <div
           className={`px-6 py-4 border-b flex items-center justify-between flex-shrink-0 ${
             isLight ? 'border-black/[0.08] bg-black/[0.02]' : 'border-white/[0.08] bg-white/[0.02]'
@@ -219,16 +219,16 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
           </div>
         </div>
 
-        {/* Search Bar & Toolbar */}
+        {/* Search Bar & Toolbar (Locked clean padding and non-overlapping input) */}
         <div
-          className={`px-6 py-2.5 border-b flex items-center justify-between gap-4 flex-shrink-0 ${
+          className={`px-6 py-3 border-b flex items-center justify-between gap-4 flex-shrink-0 ${
             isLight ? 'bg-[#f5f5f7] border-black/[0.06]' : 'bg-[#0e0e16] border-white/[0.06]'
           }`}
         >
           <div className="relative flex-1 max-w-lg">
             <LucideIcons.Search
               size={14}
-              className={`absolute left-3.5 top-1/2 -translate-y-1/2 ${
+              className={`absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${
                 isLight ? 'text-[#8e8e93]' : 'text-white/40'
               }`}
             />
@@ -237,7 +237,8 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by name, asset, timeframe (e.g. GRID, XAUUSD, M15)..."
-              className={`w-full pl-9 pr-4 py-1.5 text-[12px] rounded-xl border transition-all focus:outline-none ${
+              style={{ paddingLeft: '34px', paddingRight: '14px', paddingTop: '7px', paddingBottom: '7px' }}
+              className={`w-full text-[12.5px] rounded-xl border transition-all focus:outline-none ${
                 isLight
                   ? 'bg-white border-black/12 text-[#1d1d1f] placeholder:text-[#8e8e93] focus:border-[#0071e3] focus:ring-2 focus:ring-[#0071e3]/20'
                   : 'bg-white/[0.07] border-white/14 text-white placeholder:text-white/40 focus:border-[#007aff] focus:bg-white/[0.10] focus:ring-2 focus:ring-[#007aff]/25'
@@ -278,29 +279,29 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
           </div>
         )}
 
-        {/*  Streamlined Projects Table (No Code Language, Pure AI Quant Pipeline) */}
-        <div className="flex-1 overflow-y-auto min-h-0">
-          <table className="w-full text-left text-[12px] border-collapse">
+        {/*  Streamlined Projects Table (Flex-1 Locked Scroll Container) */}
+        <div className="flex-1 overflow-y-auto min-h-0 flex flex-col">
+          <table className="w-full text-left text-[12px] border-collapse flex-1">
             <thead
               className={`sticky top-0 z-10 select-none ${
                 isLight ? 'bg-[#f5f5f7] text-[#6e6e73]' : 'bg-[#101018] text-[#86868b]'
               }`}
             >
               <tr className="border-b border-black/[0.08] dark:border-white/[0.08]">
-                <th className="py-3 px-5 font-semibold whitespace-nowrap">Project Name & Description</th>
-                <th className="py-3 px-4 font-semibold w-[160px] whitespace-nowrap">Created</th>
-                <th className="py-3 px-4 font-semibold w-[160px] whitespace-nowrap">Modified</th>
-                <th className="py-3 px-5 font-semibold w-[170px] text-right whitespace-nowrap">Action & Manage</th>
+                <th className="py-3.5 px-6 font-semibold whitespace-nowrap">Project Name & Description</th>
+                <th className="py-3.5 px-4 font-semibold w-[160px] whitespace-nowrap">Created</th>
+                <th className="py-3.5 px-4 font-semibold w-[160px] whitespace-nowrap">Modified</th>
+                <th className="py-3.5 px-6 font-semibold w-[170px] text-right whitespace-nowrap">Action & Manage</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-black/[0.04] dark:divide-white/[0.04]">
               {filteredProjects.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="py-14 text-center text-[#86868b]">
-                    <LucideIcons.FolderSearch size={36} className="mx-auto mb-2 opacity-30" />
-                    <p className="font-semibold text-[13px]">No projects found</p>
-                    <p className="text-[12px] mt-1 opacity-75">
-                      Try another search or save the current graph as a new project.
+                  <td colSpan={4} className="py-24 px-6 text-center text-[#86868b]">
+                    <LucideIcons.FolderSearch size={48} className="mx-auto mb-3 opacity-30 text-[#86868b]" />
+                    <p className="font-bold text-[14px]">No Saved Projects Yet</p>
+                    <p className="text-[12.5px] mt-1.5 opacity-75 max-w-md mx-auto">
+                      Click "Save Current Graph" above or press ⌘S to save your Quant DAG pipeline.
                     </p>
                   </td>
                 </tr>
