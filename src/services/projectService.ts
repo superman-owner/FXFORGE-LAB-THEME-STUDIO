@@ -145,9 +145,11 @@ export function saveProjects(projects: SavedProject[]): void {
 
 export function getActiveProjectId(): string | null {
   try {
-    return localStorage.getItem(ACTIVE_PROJECT_KEY);
+    const saved = localStorage.getItem(ACTIVE_PROJECT_KEY);
+    if (saved) return saved;
+    return 'mt5-7591';
   } catch {
-    return null;
+    return 'mt5-7591';
   }
 }
 
