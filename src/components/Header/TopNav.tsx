@@ -100,22 +100,22 @@ export const TopNav: React.FC<TopNavProps> = ({
           {isProjectsOpen && (
             <div
               style={{
-                borderRadius: '6px',
+                borderRadius: '8px',
                 fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, sans-serif',
               }}
-              className={`absolute left-0 top-[calc(100%+4px)] w-72 p-[4px] z-50 backdrop-blur-2xl backdrop-saturate-150 animate-in fade-in duration-100 select-none shadow-[0_16px_40px_rgba(0,0,0,0.55),0_0_0_1px_rgba(255,255,255,0.1)] ${
+              className={`absolute left-0 top-[calc(100%+5px)] w-80 p-[6px] z-50 backdrop-blur-2xl backdrop-saturate-150 animate-in fade-in duration-100 select-none shadow-[0_18px_45px_rgba(0,0,0,0.55),0_0_0_1px_rgba(255,255,255,0.1)] ${
                 isLight
                   ? 'bg-[#f6f6f6]/95 border border-black/12 text-[#1d1d1f]'
                   : 'bg-[#25252c]/90 border border-white/[0.12] text-[#f5f5f7]'
               }`}
             >
-              {/* 1. New Project (Compact Line Height, 10px Left/Right Padding) */}
+              {/* 1. New Project (Shifted 10px right away from border) */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onNewProject?.();
                 }}
-                className={`group w-full px-[10px] py-[3.5px] rounded-[4px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
+                className={`group w-full pl-[18px] pr-[14px] py-[4.5px] rounded-[5px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
                     : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
@@ -133,7 +133,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onOpenProjectManager?.();
                 }}
-                className={`group w-full px-[10px] py-[3.5px] rounded-[4px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
+                className={`group w-full pl-[18px] pr-[14px] py-[4.5px] rounded-[5px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
                     : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
@@ -151,7 +151,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onOpenSaveProject?.();
                 }}
-                className={`group w-full px-[10px] py-[3.5px] rounded-[4px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
+                className={`group w-full pl-[18px] pr-[14px] py-[4.5px] rounded-[5px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
                     : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
@@ -163,7 +163,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                 }`}>⌘S</span>
               </button>
 
-              <div className={`my-[3px] mx-[6px] h-[1px] ${isLight ? 'bg-black/[0.08]' : 'bg-white/[0.08]'}`} />
+              <div className={`my-[4px] mx-[6px] h-[1px] ${isLight ? 'bg-black/[0.08]' : 'bg-white/[0.08]'}`} />
 
               {/* 4. Import Project (.json) */}
               <button
@@ -171,7 +171,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onImportProject?.();
                 }}
-                className={`group w-full px-[10px] py-[3.5px] rounded-[4px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
+                className={`group w-full pl-[18px] pr-[14px] py-[4.5px] rounded-[5px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
                     : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
@@ -189,7 +189,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onExportProject?.();
                 }}
-                className={`group w-full px-[10px] py-[3.5px] rounded-[4px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
+                className={`group w-full pl-[18px] pr-[14px] py-[4.5px] rounded-[5px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
                     : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
