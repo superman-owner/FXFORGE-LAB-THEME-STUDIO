@@ -79,11 +79,11 @@ export const TopNav: React.FC<TopNavProps> = ({
         {/*  Vertical Divider */}
         <div className={`h-4 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/15' : 'bg-white/15'}`} />
 
-        {/*  macOS / Figma Native Style Projects Menu */}
+        {/*  macOS / Figma Native Dropdown Menu */}
         <div className="relative" ref={projectsMenuRef}>
           <button
             onClick={() => setIsProjectsOpen(!isProjectsOpen)}
-            className={`flex items-center gap-1.5 text-xs font-medium transition-colors cursor-pointer select-none py-1 px-2 rounded-[5px] ${
+            className={`flex items-center gap-1 text-[12px] font-medium transition-colors cursor-pointer select-none py-1 px-2 rounded-[5px] ${
               isProjectsOpen
                 ? isLight
                   ? 'bg-black/8 text-[#0071e3]'
@@ -100,29 +100,32 @@ export const TopNav: React.FC<TopNavProps> = ({
           {isProjectsOpen && (
             <div
               style={{
-                borderRadius: '8px',
+                borderRadius: '6px',
                 fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, sans-serif',
+                boxShadow: isLight
+                  ? '0 12px 30px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.2)'
+                  : '0 16px 36px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.2)',
               }}
-              className={`absolute left-0 top-[calc(100%+5px)] w-80 p-[6px] z-50 backdrop-blur-2xl backdrop-saturate-150 animate-in fade-in duration-100 select-none shadow-[0_18px_45px_rgba(0,0,0,0.55),0_0_0_1px_rgba(255,255,255,0.1)] ${
+              className={`absolute left-0 top-[calc(100%+4px)] w-[240px] p-[4px] z-50 backdrop-blur-2xl backdrop-saturate-150 animate-in fade-in duration-100 select-none ${
                 isLight
-                  ? 'bg-[#f6f6f6]/95 border border-black/12 text-[#1d1d1f]'
-                  : 'bg-[#25252c]/90 border border-white/[0.12] text-[#f5f5f7]'
+                  ? 'bg-[#f6f6f6]/92 border border-black/10 text-[#1d1d1f]'
+                  : 'bg-[#2b2b32]/88 border border-white/15 text-[#f5f5f7]'
               }`}
             >
-              {/* 1. New Project (Shifted 10px right away from border) */}
+              {/* 1. New Project */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onNewProject?.();
                 }}
-                className={`group w-full pl-[18px] pr-[14px] py-[4.5px] rounded-[5px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
+                className={`group w-full px-[10px] py-[3.5px] rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
-                    : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
+                    : 'hover:bg-[#007aff] hover:text-white text-white'
                 }`}
               >
                 <span>New Project</span>
-                <span className={`text-[11.5px] font-mono tracking-wider transition-colors ${
+                <span className={`text-[12px] font-mono tracking-wider transition-colors ${
                   isLight ? 'text-black/40 group-hover:text-white' : 'text-white/45 group-hover:text-white'
                 }`}>⌘N</span>
               </button>
@@ -133,14 +136,14 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onOpenProjectManager?.();
                 }}
-                className={`group w-full pl-[18px] pr-[14px] py-[4.5px] rounded-[5px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
+                className={`group w-full px-[10px] py-[3.5px] rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
-                    : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
+                    : 'hover:bg-[#007aff] hover:text-white text-white'
                 }`}
               >
                 <span>Load Project...</span>
-                <span className={`text-[11.5px] font-mono tracking-wider transition-colors ${
+                <span className={`text-[12px] font-mono tracking-wider transition-colors ${
                   isLight ? 'text-black/40 group-hover:text-white' : 'text-white/45 group-hover:text-white'
                 }`}>⌘O</span>
               </button>
@@ -151,19 +154,19 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onOpenSaveProject?.();
                 }}
-                className={`group w-full pl-[18px] pr-[14px] py-[4.5px] rounded-[5px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
+                className={`group w-full px-[10px] py-[3.5px] rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
-                    : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
+                    : 'hover:bg-[#007aff] hover:text-white text-white'
                 }`}
               >
                 <span>Save Project...</span>
-                <span className={`text-[11.5px] font-mono tracking-wider transition-colors ${
+                <span className={`text-[12px] font-mono tracking-wider transition-colors ${
                   isLight ? 'text-black/40 group-hover:text-white' : 'text-white/45 group-hover:text-white'
                 }`}>⌘S</span>
               </button>
 
-              <div className={`my-[4px] mx-[6px] h-[1px] ${isLight ? 'bg-black/[0.08]' : 'bg-white/[0.08]'}`} />
+              <div className={`my-[4px] mx-[6px] h-[1px] ${isLight ? 'bg-black/[0.08]' : 'bg-white/[0.12]'}`} />
 
               {/* 4. Import Project (.json) */}
               <button
@@ -171,14 +174,14 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onImportProject?.();
                 }}
-                className={`group w-full pl-[18px] pr-[14px] py-[4.5px] rounded-[5px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
+                className={`group w-full px-[10px] py-[3.5px] rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
-                    : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
+                    : 'hover:bg-[#007aff] hover:text-white text-white'
                 }`}
               >
                 <span>Import Project (.json)</span>
-                <span className={`text-[11.5px] font-mono tracking-wider transition-colors ${
+                <span className={`text-[12px] font-mono tracking-wider transition-colors ${
                   isLight ? 'text-black/40 group-hover:text-white' : 'text-white/45 group-hover:text-white'
                 }`}>⌥⌘I</span>
               </button>
@@ -189,14 +192,14 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onExportProject?.();
                 }}
-                className={`group w-full pl-[18px] pr-[14px] py-[4.5px] rounded-[5px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
+                className={`group w-full px-[10px] py-[3.5px] rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
-                    : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
+                    : 'hover:bg-[#007aff] hover:text-white text-white'
                 }`}
               >
                 <span>Export Project (.json)</span>
-                <span className={`text-[11.5px] font-mono tracking-wider transition-colors ${
+                <span className={`text-[12px] font-mono tracking-wider transition-colors ${
                   isLight ? 'text-black/40 group-hover:text-white' : 'text-white/45 group-hover:text-white'
                 }`}>⌥⌘E</span>
               </button>
