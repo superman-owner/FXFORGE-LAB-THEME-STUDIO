@@ -100,108 +100,103 @@ export const TopNav: React.FC<TopNavProps> = ({
           {isProjectsOpen && (
             <div
               style={{
-                borderRadius: '8px',
+                borderRadius: '6px',
                 fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, sans-serif',
               }}
-              className={`absolute left-0 top-[calc(100%+6px)] w-80 p-[6px] z-50 backdrop-blur-2xl backdrop-saturate-150 animate-in fade-in duration-100 select-none shadow-[0_20px_50px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.12)] ${
+              className={`absolute left-0 top-[calc(100%+4px)] w-72 p-[4px] z-50 backdrop-blur-2xl backdrop-saturate-150 animate-in fade-in duration-100 select-none shadow-[0_16px_40px_rgba(0,0,0,0.55),0_0_0_1px_rgba(255,255,255,0.1)] ${
                 isLight
                   ? 'bg-[#f6f6f6]/95 border border-black/12 text-[#1d1d1f]'
                   : 'bg-[#25252c]/90 border border-white/[0.12] text-[#f5f5f7]'
               }`}
             >
-              {/* 1. New Project (10px padding top/bottom/left/right) */}
+              {/* 1. New Project (Compact Line Height, 10px Left/Right Padding) */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onNewProject?.();
                 }}
-                style={{ padding: '10px 10px' }}
-                className={`group w-full rounded-[6px] text-[13px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
+                className={`group w-full px-[10px] py-[3.5px] rounded-[4px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
                     : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
                 }`}
               >
                 <span>New Project</span>
-                <span className={`text-[12px] font-mono tracking-widest transition-colors ${
+                <span className={`text-[11.5px] font-mono tracking-wider transition-colors ${
                   isLight ? 'text-black/40 group-hover:text-white' : 'text-white/45 group-hover:text-white'
                 }`}>⌘N</span>
               </button>
 
-              {/* 2. Load Project... (10px padding top/bottom/left/right) */}
+              {/* 2. Load Project... */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onOpenProjectManager?.();
                 }}
-                style={{ padding: '10px 10px' }}
-                className={`group w-full rounded-[6px] text-[13px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
+                className={`group w-full px-[10px] py-[3.5px] rounded-[4px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
                     : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
                 }`}
               >
                 <span>Load Project...</span>
-                <span className={`text-[12px] font-mono tracking-widest transition-colors ${
+                <span className={`text-[11.5px] font-mono tracking-wider transition-colors ${
                   isLight ? 'text-black/40 group-hover:text-white' : 'text-white/45 group-hover:text-white'
                 }`}>⌘O</span>
               </button>
 
-              {/* 3. Save Project... (10px padding top/bottom/left/right) */}
+              {/* 3. Save Project... */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onOpenSaveProject?.();
                 }}
-                style={{ padding: '10px 10px' }}
-                className={`group w-full rounded-[6px] text-[13px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
+                className={`group w-full px-[10px] py-[3.5px] rounded-[4px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
                     : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
                 }`}
               >
                 <span>Save Project...</span>
-                <span className={`text-[12px] font-mono tracking-widest transition-colors ${
+                <span className={`text-[11.5px] font-mono tracking-wider transition-colors ${
                   isLight ? 'text-black/40 group-hover:text-white' : 'text-white/45 group-hover:text-white'
                 }`}>⌘S</span>
               </button>
 
-              <div className={`my-[6px] mx-[6px] h-[1px] ${isLight ? 'bg-black/[0.08]' : 'bg-white/[0.08]'}`} />
+              <div className={`my-[3px] mx-[6px] h-[1px] ${isLight ? 'bg-black/[0.08]' : 'bg-white/[0.08]'}`} />
 
-              {/* 4. Import Project (.json) (10px padding top/bottom/left/right) */}
+              {/* 4. Import Project (.json) */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onImportProject?.();
                 }}
-                style={{ padding: '10px 10px' }}
-                className={`group w-full rounded-[6px] text-[13px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
+                className={`group w-full px-[10px] py-[3.5px] rounded-[4px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
                     : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
                 }`}
               >
                 <span>Import Project (.json)</span>
-                <span className={`text-[12px] font-mono tracking-widest transition-colors ${
+                <span className={`text-[11.5px] font-mono tracking-wider transition-colors ${
                   isLight ? 'text-black/40 group-hover:text-white' : 'text-white/45 group-hover:text-white'
                 }`}>⌥⌘I</span>
               </button>
 
-              {/* 5. Export Project (.json) (10px padding top/bottom/left/right) */}
+              {/* 5. Export Project (.json) */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onExportProject?.();
                 }}
-                style={{ padding: '10px 10px' }}
-                className={`group w-full rounded-[6px] text-[13px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
+                className={`group w-full px-[10px] py-[3.5px] rounded-[4px] text-[12.5px] leading-[18px] font-normal flex items-center justify-between gap-6 transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
                     : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
                 }`}
               >
                 <span>Export Project (.json)</span>
-                <span className={`text-[12px] font-mono tracking-widest transition-colors ${
+                <span className={`text-[11.5px] font-mono tracking-wider transition-colors ${
                   isLight ? 'text-black/40 group-hover:text-white' : 'text-white/45 group-hover:text-white'
                 }`}>⌥⌘E</span>
               </button>
