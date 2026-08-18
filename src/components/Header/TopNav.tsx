@@ -214,8 +214,11 @@ export const TopNav: React.FC<TopNavProps> = ({
           )}
         </div>
 
-        {/* 1.  Vertical Divider after Projects Menu */}
-        <div className={`h-4 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/15' : 'bg-white/15'}`} />
+        {/* 1.  Vertical Divider between Projects and Active Project Name */}
+        <div
+          style={{ marginLeft: '10px', marginRight: '10px' }}
+          className={`h-4 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/15' : 'bg-white/15'}`}
+        />
 
         {/* 2.  Active Project Name Display */}
         <div
@@ -235,9 +238,6 @@ export const TopNav: React.FC<TopNavProps> = ({
             {projectName || 'Untitled Project'}
           </span>
         </div>
-
-        {/* 3.  Vertical Divider before Flow DAG */}
-        <div className={`h-4 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/15' : 'bg-white/15'}`} />
       </div>
 
       {/* Main Suite (Shifted to the Right: 'Connected' & Theme Toggle end exactly 20px from right edge) */}
@@ -245,6 +245,12 @@ export const TopNav: React.FC<TopNavProps> = ({
         {/*  Pure Frameless Glowing View Switcher */}
         {onViewChange && (
           <div className="flex items-center gap-4">
+            {/*  Vertical Divider right beside Flow DAG with 10px spacing on left and right */}
+            <div
+              style={{ marginLeft: '10px', marginRight: '10px' }}
+              className={`h-4 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/15' : 'bg-white/15'}`}
+            />
+
             <button
               onClick={() => onViewChange('studio')}
               className={`flex items-center gap-1.5 text-xs transition-all cursor-pointer ${
