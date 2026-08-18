@@ -118,7 +118,8 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onNewProject?.();
                 }}
-                className={`group w-full pl-[20px] pr-[10px] py-[3.5px] rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
+                style={{ paddingLeft: '20px', paddingRight: '10px', paddingTop: '3.5px', paddingBottom: '3.5px' }}
+                className={`group w-full rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
                     : 'hover:bg-[#007aff] hover:text-white text-white'
@@ -136,7 +137,8 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onOpenProjectManager?.();
                 }}
-                className={`group w-full pl-[20px] pr-[10px] py-[3.5px] rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
+                style={{ paddingLeft: '20px', paddingRight: '10px', paddingTop: '3.5px', paddingBottom: '3.5px' }}
+                className={`group w-full rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
                     : 'hover:bg-[#007aff] hover:text-white text-white'
@@ -154,7 +156,8 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onOpenSaveProject?.();
                 }}
-                className={`group w-full pl-[20px] pr-[10px] py-[3.5px] rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
+                style={{ paddingLeft: '20px', paddingRight: '10px', paddingTop: '3.5px', paddingBottom: '3.5px' }}
+                className={`group w-full rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
                     : 'hover:bg-[#007aff] hover:text-white text-white'
@@ -174,7 +177,8 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onImportProject?.();
                 }}
-                className={`group w-full pl-[20px] pr-[10px] py-[3.5px] rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
+                style={{ paddingLeft: '20px', paddingRight: '10px', paddingTop: '3.5px', paddingBottom: '3.5px' }}
+                className={`group w-full rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
                     : 'hover:bg-[#007aff] hover:text-white text-white'
@@ -192,7 +196,8 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onExportProject?.();
                 }}
-                className={`group w-full pl-[20px] pr-[10px] py-[3.5px] rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
+                style={{ paddingLeft: '20px', paddingRight: '10px', paddingTop: '3.5px', paddingBottom: '3.5px' }}
+                className={`group w-full rounded-[4px] text-[13px] font-normal leading-[18px] flex items-center justify-between transition-colors cursor-pointer text-left ${
                   isLight
                     ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
                     : 'hover:bg-[#007aff] hover:text-white text-white'
