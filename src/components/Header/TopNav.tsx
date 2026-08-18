@@ -106,7 +106,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                   ? '0 12px 30px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.2)'
                   : '0 16px 36px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.2)',
               }}
-              className={`absolute left-0 top-[calc(100%+4px)] w-[205px] p-[4px] z-50 backdrop-blur-2xl backdrop-saturate-150 animate-in fade-in duration-100 select-none ${
+              className={`absolute left-[-10px] top-[calc(100%+4px)] w-[225px] pt-[4px] pb-[14px] px-[14px] z-50 backdrop-blur-2xl backdrop-saturate-150 animate-in fade-in duration-100 select-none ${
                 isLight
                   ? 'bg-[#f6f6f6]/92 border border-black/10 text-[#1d1d1f]'
                   : 'bg-[#2b2b32]/88 border border-white/15 text-[#f5f5f7]'
