@@ -40,6 +40,8 @@ export const GROUPS: NodeGroup[] = [
 export interface PipelinePresetSettings {
   timeframe: string;
   bars_count: number;
+  ret_lookbacks: string;
+  target_episodes: string;
   // Volatility
   vol_window: number;
   sma_period: number;
@@ -51,6 +53,7 @@ export interface PipelinePresetSettings {
   // Expansion
   units_fc1: string;
   activation_fc1: string;
+  attention_heads: string;
   // Regularization
   dropout_rate: number;
   dropout_mode: string;
@@ -74,12 +77,18 @@ export interface PipelinePresetSettings {
   trailing_step_atr: number;
   // Policy Head
   entropy_beta: number;
+  // Stress Test & Validation
+  monte_carlo_sims: number;
+  walk_forward_splits: number;
+  onnx_model_name: string;
 }
 
 export const STRATEGY_PRESET_CONFIGS: Record<string, PipelinePresetSettings> = {
   'Standard Quant': {
     timeframe: 'M15',
     bars_count: 10000,
+    ret_lookbacks: '5, 10, 20',
+    target_episodes: '400',
     vol_window: 10,
     sma_period: 20,
     metric: 'ATR Normalized',
@@ -88,6 +97,7 @@ export const STRATEGY_PRESET_CONFIGS: Record<string, PipelinePresetSettings> = {
     active_session: 'London & New York',
     units_fc1: '64',
     activation_fc1: 'LeakyReLU',
+    attention_heads: '4',
     dropout_rate: 0.15,
     dropout_mode: 'Standard Dropout',
     norm_type: 'LayerNorm',
@@ -106,10 +116,15 @@ export const STRATEGY_PRESET_CONFIGS: Record<string, PipelinePresetSettings> = {
     be_trigger_rr: 1.5,
     trailing_step_atr: 1.2,
     entropy_beta: 0.08,
+    monte_carlo_sims: 200,
+    walk_forward_splits: 5,
+    onnx_model_name: 'rl_standard_quant.onnx',
   },
   'Fibonacci Scale': {
     timeframe: 'M30',
     bars_count: 15000,
+    ret_lookbacks: '3, 8, 21',
+    target_episodes: '500',
     vol_window: 14,
     sma_period: 34,
     metric: 'ATR Normalized',
@@ -118,6 +133,7 @@ export const STRATEGY_PRESET_CONFIGS: Record<string, PipelinePresetSettings> = {
     active_session: 'London & New York',
     units_fc1: '64',
     activation_fc1: 'LeakyReLU',
+    attention_heads: '4',
     dropout_rate: 0.15,
     dropout_mode: 'Standard Dropout',
     norm_type: 'LayerNorm',
@@ -136,10 +152,15 @@ export const STRATEGY_PRESET_CONFIGS: Record<string, PipelinePresetSettings> = {
     be_trigger_rr: 1.6,
     trailing_step_atr: 1.5,
     entropy_beta: 0.08,
+    monte_carlo_sims: 300,
+    walk_forward_splits: 5,
+    onnx_model_name: 'rl_fibonacci_m30.onnx',
   },
   'Ultra-Fast Scalper': {
     timeframe: 'M1',
     bars_count: 50000,
+    ret_lookbacks: '2, 5, 10',
+    target_episodes: '500',
     vol_window: 5,
     sma_period: 10,
     metric: 'ATR Normalized',
@@ -148,6 +169,7 @@ export const STRATEGY_PRESET_CONFIGS: Record<string, PipelinePresetSettings> = {
     active_session: 'London Only',
     units_fc1: '64',
     activation_fc1: 'LeakyReLU',
+    attention_heads: '4',
     dropout_rate: 0.05,
     dropout_mode: 'Standard Dropout',
     norm_type: 'LayerNorm',
@@ -166,10 +188,15 @@ export const STRATEGY_PRESET_CONFIGS: Record<string, PipelinePresetSettings> = {
     be_trigger_rr: 1.2,
     trailing_step_atr: 0.8,
     entropy_beta: 0.05,
+    monte_carlo_sims: 500,
+    walk_forward_splits: 10,
+    onnx_model_name: 'rl_scalper_m1.onnx',
   },
   'Macro Trend Follower': {
     timeframe: 'H4',
     bars_count: 5000,
+    ret_lookbacks: '10, 25, 50',
+    target_episodes: '300',
     vol_window: 20,
     sma_period: 50,
     metric: 'ATR Normalized',
@@ -178,6 +205,7 @@ export const STRATEGY_PRESET_CONFIGS: Record<string, PipelinePresetSettings> = {
     active_session: 'All Sessions',
     units_fc1: '128',
     activation_fc1: 'LeakyReLU',
+    attention_heads: '8',
     dropout_rate: 0.20,
     dropout_mode: 'Standard Dropout',
     norm_type: 'LayerNorm',
@@ -196,6 +224,9 @@ export const STRATEGY_PRESET_CONFIGS: Record<string, PipelinePresetSettings> = {
     be_trigger_rr: 2.0,
     trailing_step_atr: 2.0,
     entropy_beta: 0.10,
+    monte_carlo_sims: 100,
+    walk_forward_splits: 3,
+    onnx_model_name: 'rl_macro_trend_h4.onnx',
   },
 };
 

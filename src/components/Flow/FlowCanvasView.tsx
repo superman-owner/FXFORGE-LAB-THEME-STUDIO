@@ -415,6 +415,19 @@ export const autoTunePipelineNodes = (presetName: string, currentNodes: Node[]):
           },
         };
 
+      case 'lookback_returns_window':
+        return {
+          ...node,
+          data: {
+            ...currentData,
+            lookbacks: cfg.ret_lookbacks,
+            execution: {
+              status: 'passed',
+              detail: `Auto-tuned Lookbacks: [${cfg.ret_lookbacks}]`,
+            },
+          },
+        };
+
       case 'volatility_indicator':
         return {
           ...node,
@@ -430,6 +443,58 @@ export const autoTunePipelineNodes = (presetName: string, currentNodes: Node[]):
           },
         };
 
+      case 'multi_timeframe_fusion':
+        return {
+          ...node,
+          data: {
+            ...currentData,
+            higher_tf: cfg.higher_tf,
+            execution: {
+              status: 'passed',
+              detail: `Auto-tuned MTF: ${cfg.higher_tf}`,
+            },
+          },
+        };
+
+      case 'news_impact_filter':
+        return {
+          ...node,
+          data: {
+            ...currentData,
+            filter_high_impact: cfg.news_filter,
+            execution: {
+              status: 'passed',
+              detail: `Auto-tuned News Filter: ${cfg.news_filter ? 'Active' : 'Bypassed'}`,
+            },
+          },
+        };
+
+      case 'session_time_filter':
+        return {
+          ...node,
+          data: {
+            ...currentData,
+            active_session: cfg.active_session,
+            execution: {
+              status: 'passed',
+              detail: `Auto-tuned Session: ${cfg.active_session}`,
+            },
+          },
+        };
+
+      case 'training_episodes_config':
+        return {
+          ...node,
+          data: {
+            ...currentData,
+            target_episodes: cfg.target_episodes,
+            execution: {
+              status: 'passed',
+              detail: `Auto-tuned: ${cfg.target_episodes} Target Episodes`,
+            },
+          },
+        };
+
       case 'fc1_dense_expansion':
         return {
           ...node,
@@ -440,6 +505,19 @@ export const autoTunePipelineNodes = (presetName: string, currentNodes: Node[]):
             execution: {
               status: 'passed',
               detail: `Auto-tuned: 6 to ${cfg.units_fc1} (${cfg.activation_fc1})`,
+            },
+          },
+        };
+
+      case 'fc1_attention_weights':
+        return {
+          ...node,
+          data: {
+            ...currentData,
+            heads: cfg.attention_heads,
+            execution: {
+              status: 'passed',
+              detail: `Auto-tuned: ${cfg.attention_heads} Attention Heads`,
             },
           },
         };
@@ -580,32 +658,6 @@ export const autoTunePipelineNodes = (presetName: string, currentNodes: Node[]):
           },
         };
 
-      case 'news_impact_filter':
-        return {
-          ...node,
-          data: {
-            ...currentData,
-            filter_high_impact: cfg.news_filter,
-            execution: {
-              status: 'passed',
-              detail: `Auto-tuned News Filter: ${cfg.news_filter ? 'Active' : 'Bypassed'}`,
-            },
-          },
-        };
-
-      case 'session_time_filter':
-        return {
-          ...node,
-          data: {
-            ...currentData,
-            active_session: cfg.active_session,
-            execution: {
-              status: 'passed',
-              detail: `Auto-tuned Session: ${cfg.active_session}`,
-            },
-          },
-        };
-
       case 'trailing_stop_breakeven':
         return {
           ...node,
@@ -615,20 +667,58 @@ export const autoTunePipelineNodes = (presetName: string, currentNodes: Node[]):
             trailing_step_atr: cfg.trailing_step_atr,
             execution: {
               status: 'passed',
-              detail: `Auto-tuned Breakeven: ${cfg.be_trigger_rr}R`,
+              detail: `Auto-tuned Breakeven: ${cfg.be_trigger_rr}R, Trail: ${cfg.trailing_step_atr} ATR`,
             },
           },
         };
 
-      case 'multi_timeframe_fusion':
+      case 'monte_carlo_stress_test':
         return {
           ...node,
           data: {
             ...currentData,
-            higher_tf: cfg.higher_tf,
+            simulations: cfg.monte_carlo_sims,
             execution: {
               status: 'passed',
-              detail: `Auto-tuned MTF: ${cfg.higher_tf}`,
+              detail: `Auto-tuned: ${cfg.monte_carlo_sims} Stress Paths`,
+            },
+          },
+        };
+
+      case 'walk_forward_robustness':
+        return {
+          ...node,
+          data: {
+            ...currentData,
+            splits: cfg.walk_forward_splits,
+            execution: {
+              status: 'passed',
+              detail: `Auto-tuned: ${cfg.walk_forward_splits}-Fold Walk-Forward`,
+            },
+          },
+        };
+
+      case 'onnx_mt5_compiler':
+        return {
+          ...node,
+          data: {
+            ...currentData,
+            model_name: cfg.onnx_model_name,
+            execution: {
+              status: 'passed',
+              detail: `Auto-tuned Export: ${cfg.onnx_model_name}`,
+            },
+          },
+        };
+
+      case 'telegram_webhook_alert':
+        return {
+          ...node,
+          data: {
+            ...currentData,
+            execution: {
+              status: 'passed',
+              detail: `Auto-tuned Alert: ${presetName}`,
             },
           },
         };
@@ -1017,19 +1107,22 @@ const FloatingInspector = React.memo<FloatingInspectorProps>(({
   const handleFieldChange = useCallback((key: string, newVal: any) => {
     if (key === 'preset' && STRATEGY_PRESET_CONFIGS[String(newVal)]) {
       const presetData = STRATEGY_PRESET_CONFIGS[String(newVal)];
-      setDraftData((prev) => ({
-        ...prev,
+      const updatedDraft = {
+        ...draftData,
         preset: newVal,
         timeframe: presetData.timeframe,
         bars_count: presetData.bars_count,
-      }));
+      };
+      setDraftData(updatedDraft);
+      // Instantly tune the entire DAG pipeline so all nodes update in real time
+      updateNodeData(node.id, updatedDraft);
     } else {
       setDraftData((prev) => ({
         ...prev,
         [key]: newVal,
       }));
     }
-  }, []);
+  }, [draftData, node.id, updateNodeData]);
 
   const handleCommitUpdate = useCallback(() => {
     updateNodeData(node.id, draftData);

@@ -83,6 +83,16 @@ export function parseArchitecturePure(nodesList: Node[]): ArchitectureSpec {
         if (d.preset) spec.strategyPreset = String(d.preset);
         break;
 
+      case 'lookback_returns_window':
+        if (d.lookbacks) {
+          const lbs = String(d.lookbacks).split(',').map((x) => x.trim()).filter(Boolean);
+          if (lbs.length > 0) {
+            spec.inputLabels = lbs.map((lb) => `Ret (${lb}d)`).concat(['Vol (10d)', 'Dist SMA', 'Position']);
+            spec.inputDimension = spec.inputLabels.length;
+          }
+        }
+        break;
+
       case 'training_episodes_config':
         if (d.target_episodes) {
           const rawVal = String(d.target_episodes).replace(/,/g, '').trim();
