@@ -1,138 +1,27 @@
 import type { SavedProject } from '../types/project';
 
-const STORAGE_KEY = 'fxforge_saved_projects_v2';
-const ACTIVE_PROJECT_KEY = 'fxforge_active_project_id';
-
-const INITIAL_PROJECTS: SavedProject[] = [
-  {
-    id: 'mt4-5274',
-    name: '(Jobot) Accumulative GRID Intelligence',
-    type: 'Grid Intelligence',
-    language: 'MQL4',
-    symbol: 'EURUSD',
-    timeframe: 'M15',
-    nodesCount: 18,
-    createdAt: '2025.01.14 (13:59)',
-    modifiedAt: '2026.08.12 (18:21)',
-    description: 'Dynamic Martingale and Hedging Grid with Exponential Step Spacing and Volatility Dampening.',
-    nodes: [],
-    edges: [],
-  },
-  {
-    id: 'mt5-3643',
-    name: '28DASHBOARD Currency Strength Matrix',
-    type: 'Multi-TF Matrix',
-    language: 'MQL5',
-    symbol: 'MULTI-28',
-    timeframe: 'H1',
-    nodesCount: 24,
-    createdAt: '2026.01.08 (07:24)',
-    modifiedAt: '2026.08.12 (10:30)',
-    description: 'Real-time 28 Forex pairs relative strength meter with multi-timeframe correlation matrix.',
-    nodes: [],
-    edges: [],
-  },
-  {
-    id: 'mt5-7591',
-    name: 'JOBOT LLM DASHBOARD ENG',
-    type: 'Deep RL Policy',
-    language: 'MQL5',
-    symbol: 'XAUUSD',
-    timeframe: 'M15',
-    nodesCount: 21,
-    createdAt: '2026.01.21 (04:41)',
-    modifiedAt: '2026.08.03 (08:03)',
-    description: 'Actor-Critic Deep RL Policy Network trained on Gold order flow and macro sentiment features.',
-    nodes: [],
-    edges: [],
-  },
-  {
-    id: 'mt4-8513',
-    name: 'DASHBOARD ATR GRID',
-    type: 'Expert',
-    language: 'MQL4',
-    symbol: 'GBPUSD',
-    timeframe: 'M30',
-    nodesCount: 16,
-    createdAt: '2024.11.06 (07:00)',
-    modifiedAt: '2026.08.02 (12:37)',
-    description: 'ATR-adaptive grid density with dynamic take-profit cluster calculation.',
-    nodes: [],
-    edges: [],
-  },
-  {
-    id: 'mt5-4738',
-    name: 'TEST GZ Institutional Breakout',
-    type: 'BPNN Scalper',
-    language: 'MQL5',
-    symbol: 'XAUUSD',
-    timeframe: 'M5',
-    nodesCount: 19,
-    createdAt: '2026.05.25 (19:55)',
-    modifiedAt: '2026.07.31 (08:11)',
-    description: 'Fast Fibonacci Rprop BPNN momentum breakout detector for London open volatility spikes.',
-    nodes: [],
-    edges: [],
-  },
-  {
-    id: 'mt5-7407',
-    name: '(MZE0187) TRENDRA_SAR Alpha Hunter',
-    type: 'Expert',
-    language: 'MQL5',
-    symbol: 'BTCUSD',
-    timeframe: 'H4',
-    nodesCount: 15,
-    createdAt: '2026.01.31 (07:46)',
-    modifiedAt: '2026.06.13 (02:01)',
-    description: 'Parabolic SAR multi-stage trailing stop with regime shift confirmation.',
-    nodes: [],
-    edges: [],
-  },
-  {
-    id: 'mt5-6572',
-    name: 'CLOSE FAST Scalper Guard',
-    type: 'Risk Manager',
-    language: 'MQL5',
-    symbol: 'ALL',
-    timeframe: 'M1',
-    nodesCount: 12,
-    createdAt: '2026.02.10 (03:57)',
-    modifiedAt: '2026.05.31 (22:12)',
-    description: 'Emergency basket close on target drawdown threshold or sudden spread blowout.',
-    nodes: [],
-    edges: [],
-  },
-  {
-    id: 'mt5-6894',
-    name: 'GOOGLE SHEET LOCK Remote Licensing',
-    type: 'Expert',
-    language: 'MQL5',
-    symbol: 'GLOBAL',
-    timeframe: 'D1',
-    nodesCount: 14,
-    createdAt: '2026.01.02 (03:15)',
-    modifiedAt: '2026.05.19 (06:25)',
-    description: 'Live MT5 authorization and remote risk parameter synchronization via Google Sheets API Webhook.',
-    nodes: [],
-    edges: [],
-  },
-];
+const STORAGE_KEY = 'fxforge_saved_projects_v4';
+const ACTIVE_PROJECT_KEY = 'fxforge_active_project_id_v4';
 
 export function getSavedProjects(): SavedProject[] {
   try {
+    // Clear legacy keys with mock data
+    localStorage.removeItem('fxforge_saved_projects_v2');
+    localStorage.removeItem('fxforge_saved_projects_v3');
+    localStorage.removeItem('fxforge_active_project_id');
+
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length > 0) {
+      if (Array.isArray(parsed)) {
         return parsed;
       }
     }
   } catch (e) {
     console.error('Failed to load saved projects:', e);
   }
-  // Initialize default projects
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_PROJECTS));
-  return INITIAL_PROJECTS;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+  return [];
 }
 
 export function saveProjects(projects: SavedProject[]): void {
@@ -147,9 +36,9 @@ export function getActiveProjectId(): string | null {
   try {
     const saved = localStorage.getItem(ACTIVE_PROJECT_KEY);
     if (saved) return saved;
-    return 'mt5-7591';
+    return null;
   } catch {
-    return 'mt5-7591';
+    return null;
   }
 }
 
