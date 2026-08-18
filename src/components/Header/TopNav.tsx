@@ -79,23 +79,23 @@ export const TopNav: React.FC<TopNavProps> = ({
         {/*  Vertical Divider */}
         <div className={`h-4 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/15' : 'bg-white/15'}`} />
 
-        {/* FxDreema-Style Projects Dropdown Menu */}
+        {/* FxDreema-Style Projects Dropdown Menu (No Capsule, Clean Menu Bar Style) */}
         <div className="relative" ref={projectsMenuRef}>
           <button
             onClick={() => setIsProjectsOpen(!isProjectsOpen)}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer select-none ${
+            className={`flex items-center gap-1.5 text-xs font-semibold transition-colors cursor-pointer select-none py-1 px-1.5 rounded-md ${
               isProjectsOpen
                 ? isLight
-                  ? 'bg-black/10 text-[#0071e3]'
-                  : 'bg-white/15 text-[#007aff]'
+                  ? 'text-[#0071e3]'
+                  : 'text-[#007aff]'
                 : isLight
-                ? 'hover:bg-black/5 text-[#1d1d1f]'
-                : 'hover:bg-white/10 text-white/90'
+                ? 'text-[#1d1d1f] hover:text-[#0071e3]'
+                : 'text-white/90 hover:text-white'
             }`}
           >
             <LucideIcons.FolderKanban size={13} className="text-[#007aff]" />
             <span>Projects</span>
-            <LucideIcons.ChevronDown size={11} className={`transition-transform duration-150 ${isProjectsOpen ? 'rotate-180' : ''}`} />
+            <LucideIcons.ChevronDown size={11} className={`transition-transform duration-150 opacity-60 ${isProjectsOpen ? 'rotate-180' : ''}`} />
           </button>
 
           {isProjectsOpen && (
@@ -106,6 +106,21 @@ export const TopNav: React.FC<TopNavProps> = ({
                   : 'bg-[#14141e]/95 border-white/10 text-white shadow-[0_15px_40px_rgba(0,0,0,0.7)]'
               }`}
             >
+              {/* 1. New Project at the very TOP */}
+              <button
+                onClick={() => {
+                  setIsProjectsOpen(false);
+                  onNewProject?.();
+                }}
+                className={`w-full px-3 py-1.5 text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer text-left ${
+                  isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
+                }`}
+              >
+                <LucideIcons.FilePlus size={13} className="text-[#30d158]" />
+                <span className="flex-1 font-semibold">New Project</span>
+                <span className="text-[10px] opacity-40 font-mono">⌘N</span>
+              </button>
+
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
@@ -129,24 +144,9 @@ export const TopNav: React.FC<TopNavProps> = ({
                   isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
                 }`}
               >
-                <LucideIcons.Save size={13} className="text-[#30d158]" />
+                <LucideIcons.Save size={13} className="text-[#00c7be]" />
                 <span className="flex-1">Save Project...</span>
                 <span className="text-[10px] opacity-40 font-mono">⌘S</span>
-              </button>
-
-              <div className={`my-1 h-[1px] ${isLight ? 'bg-black/5' : 'bg-white/10'}`} />
-
-              <button
-                onClick={() => {
-                  setIsProjectsOpen(false);
-                  onNewProject?.();
-                }}
-                className={`w-full px-3 py-1.5 text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer text-left ${
-                  isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
-                }`}
-              >
-                <LucideIcons.FilePlus size={13} className="text-[#ff9f0a]" />
-                <span className="flex-1">New Blank Project</span>
               </button>
 
               <div className={`my-1 h-[1px] ${isLight ? 'bg-black/5' : 'bg-white/10'}`} />
