@@ -345,7 +345,13 @@ class FXForgeRLEnvironment:
 # =========================================================================
 # 5. ONNX EXPORT (STANDALONE ZERO-LATENCY)
 # =========================================================================
-def export_standalone_onnx_to_mt5(model: nn.Module, state_dim: int = 6, export_name: str = "rl_trading_model.onnx"):
+def export_standalone_onnx_to_mt5(model: nn.Module, state_dim: int = 6, config: dict = None):
+    if config is None:
+        config = {}
+    export_name = str(config.get('export_name', 'rl_trading_model.onnx')).strip()
+    target_folder = str(config.get('target_folder', 'MQL5/Files/')).strip()
+    opset_version = int(config.get('opset', 14))
+
     base_dir = os.path.dirname(os.path.abspath(__file__))
     onnx_path = os.path.join(base_dir, export_name)
     model.eval()
@@ -372,33 +378,44 @@ def export_standalone_onnx_to_mt5(model: nn.Module, state_dim: int = 6, export_n
         # Strictly use legacy TorchScript export to ensure a single self-contained .onnx without .data splits
         torch.onnx.export(
             wrapper, dummy_input, onnx_path,
-            export_params=True, opset_version=14, do_constant_folding=True,
+            export_params=True, opset_version=opset_version, do_constant_folding=True,
             input_names=['state_input'], output_names=['action_probs'],
             dynamic_axes=None, dynamo=False
         )
-        print(f"\n[OK] Single-File ONNX Model Generated: {onnx_path} ({os.path.getsize(onnx_path)} bytes)")
+        print(f"\n[OK] Single-File ONNX Model Generated: {onnx_path} (Opset {opset_version}, {os.path.getsize(onnx_path)} bytes)")
     except Exception as e:
         print(f"[ONNX Export Warning] Legacy fallback: {e}")
         traced = torch.jit.trace(wrapper, dummy_input)
         torch.onnx.export(
             traced, dummy_input, onnx_path,
-            export_params=True, opset_version=14, do_constant_folding=True,
+            export_params=True, opset_version=opset_version, do_constant_folding=True,
             input_names=['state_input'], output_names=['action_probs'],
             dynamic_axes=None, dynamo=False
         )
 
-    # Search and Copy to MetaTrader 5 Terminal Directories
-    appdata = os.getenv('APPDATA')
-    if appdata:
-        pattern = os.path.join(appdata, 'MetaQuotes', 'Terminal', '*', 'MQL5', 'Files')
-        for target_dir in glob.glob(pattern):
-            try:
-                os.makedirs(target_dir, exist_ok=True)
-                dest = os.path.join(target_dir, export_name)
-                shutil.copy2(onnx_path, dest)
-                print(f"[DEPLOY] Auto-copied to MT5 Files Directory: {dest}")
-            except Exception as e:
-                print(f"[WARNING] Could not copy to {target_dir}: {e}")
+    # Search and Copy to Target Folder (Absolute or MT5 Directory)
+    if os.path.isabs(target_folder):
+        try:
+            os.makedirs(target_folder, exist_ok=True)
+            dest = os.path.join(target_folder, export_name)
+            shutil.copy2(onnx_path, dest)
+            print(f"[DEPLOY] Auto-copied to Target Directory: {dest}")
+        except Exception as e:
+            print(f"[WARNING] Could not copy to {target_folder}: {e}")
+    else:
+        clean_rel = target_folder.replace('\\', '/').strip('/')
+        appdata = os.getenv('APPDATA')
+        if appdata:
+            pattern = os.path.join(appdata, 'MetaQuotes', 'Terminal', '*', clean_rel)
+            matched = glob.glob(pattern)
+            for target_dir in matched:
+                try:
+                    os.makedirs(target_dir, exist_ok=True)
+                    dest = os.path.join(target_dir, export_name)
+                    shutil.copy2(onnx_path, dest)
+                    print(f"[DEPLOY] Auto-copied to MT5 Directory ({clean_rel}): {dest}")
+                except Exception as e:
+                    print(f"[WARNING] Could not copy to {target_dir}: {e}")
 
 # =========================================================================
 # 6. MAIN DYNAMIC TRAINING PIPELINE
@@ -566,7 +583,7 @@ def main():
             time.sleep(0.015)
 
     # Export Model
-    export_standalone_onnx_to_mt5(model, state_dim=6, export_name="rl_trading_model.onnx")
+    export_standalone_onnx_to_mt5(model, state_dim=6, config=config)
     print(f"\n[DONE] Dynamic Training & 1-Click MT5 Deployment Completed Successfully!", flush=True)
 
 if __name__ == "__main__":

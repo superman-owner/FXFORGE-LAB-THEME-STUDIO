@@ -153,6 +153,7 @@ function AppContent() {
     setLogs((prev) => [
       ...prev,
       `[NODE PIPELINE] Applying Node Config: ${architectureSpec.strategyPreset} (${architectureSpec.symbol} ${architectureSpec.timeframe})`,
+      `[NODE PIPELINE] Target Output: ${architectureSpec.targetFolder || 'MQL5/Files/'} (Opset ${architectureSpec.opsetVersion || 14})`,
       `[NODE PIPELINE] Layers: 6 -> ${architectureSpec.hidden1Units} (${architectureSpec.hidden1Activation}) -> Dropout(${architectureSpec.dropoutRate}) -> ${architectureSpec.hidden2Units} -> 3 Actions`,
       `[RL ENGINE] Launching Real PyTorch Training Engine (${architectureSpec.totalEpisodes || 400} Episodes)...`,
     ]);
@@ -162,6 +163,9 @@ function AppContent() {
       timeframe: architectureSpec.timeframe,
       bars_count: architectureSpec.barsCount,
       strategy_preset: architectureSpec.strategyPreset,
+      target_folder: architectureSpec.targetFolder || 'MQL5/Files/',
+      opset: architectureSpec.opsetVersion || 14,
+      export_name: architectureSpec.exportName || 'rl_trading_model.onnx',
       hidden1_units: architectureSpec.hidden1Units,
       hidden1_activation: architectureSpec.hidden1Activation,
       has_dropout: architectureSpec.hasDropout,

@@ -1,114 +1,139 @@
+import type { ArchitectureSpec } from '../context/FlowContext';
+
 /**
  * FXFORGE LAB - INSTITUTIONAL ONNX EXPORT & PRODUCTION MQL5 SPECIFICATION
  * Generates PyTorch training & ONNX export script + Complete Native MQL5 Expert Advisor Source
  * Includes: Dynamic Lot Sizing, Drawdown Shield, Trailing Stop/Breakeven, News & Session Guards
  */
 
-export function generatePythonOnnxScript(): string {
+export function generatePythonOnnxScript(spec?: Partial<ArchitectureSpec>): string {
+  const targetFolder = spec?.targetFolder || 'MQL5/Files/';
+  const opsetVersion = spec?.opsetVersion || 14;
+  const exportName = spec?.exportName || 'rl_trading_model.onnx';
+  const stateDim = spec?.inputDimension || 6;
+  const hidden1 = spec?.hidden1Units || 64;
+  const hidden2 = spec?.hidden2Units || 32;
+  const hidden1Act = spec?.hidden1Activation || 'LeakyReLU';
+  const hidden2Act = spec?.hidden2Activation || 'LeakyReLU';
+  const hasDropout = spec?.hasDropout ?? true;
+  const dropoutRate = spec?.dropoutRate ?? 0.15;
+  const hasLayerNorm = spec?.hasLayerNorm ?? true;
+  const hasResidual = spec?.hasResidual ?? true;
+
   return `"""
 FXFORGE LAB - DEEP RL POLICY ONNX EXPORTER
 Stage 4 & 5: Deep RL Policy (Actor MLP) & Zero-Latency ONNX Exporter for MetaTrader 5
-Opset Version: 14 | Input: [1, 8] float32 | Output: [1, 3] float32
+Opset Version: ${opsetVersion} | Target: ${targetFolder} | Input: [1, ${stateDim}] float32 | Output: [1, 3] float32
 """
 
 import os
 import glob
+import shutil
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 
-# 1. ACTOR POLICY NETWORK ARCHITECTURE (s_t in R^8 -> pi in R^3)
+# 1. DYNAMIC ACTOR POLICY NETWORK ARCHITECTURE (s_t in R^${stateDim} -> pi in R^3)
 class FXForgeActorPolicy(nn.Module):
-    def __init__(self, state_dim: int = 8, action_dim: int = 3):
+    def __init__(self, state_dim: int = ${stateDim}, action_dim: int = 3):
         super(FXForgeActorPolicy, self).__init__()
-        self.fc1 = nn.Linear(state_dim, 64)
-        self.act1 = nn.LeakyReLU(negative_slope=0.1)
-        self.drop = nn.Dropout(p=0.15)
-        self.norm = nn.LayerNorm(64)
+        self.fc1 = nn.Linear(state_dim, ${hidden1})
+        self.act1 = nn.${hidden1Act === 'ReLU' ? 'ReLU()' : hidden1Act === 'GELU' ? 'GELU()' : 'LeakyReLU(negative_slope=0.1)'}
+        self.drop = nn.Dropout(p=${dropoutRate}) if ${hasDropout ? 'True' : 'False'} else nn.Identity()
+        self.norm = nn.LayerNorm(${hidden1}) if ${hasLayerNorm ? 'True' : 'False'} else nn.Identity()
         
-        self.fc2 = nn.Linear(64, 32)
-        self.act2 = nn.LeakyReLU(negative_slope=0.1)
+        self.fc2 = nn.Linear(${hidden1}, ${hidden2})
+        self.act2 = nn.${hidden2Act === 'ReLU' ? 'ReLU()' : hidden2Act === 'GELU' ? 'GELU()' : 'LeakyReLU(negative_slope=0.1)'}
         
-        self.head = nn.Linear(32, action_dim)
+        self.head = nn.Linear(${hidden2}, action_dim)
         self.softmax = nn.Softmax(dim=-1)
 
     def forward(self, state_input: torch.Tensor) -> torch.Tensor:
         """
-        Input state_input: [batch_size, 8]
-          - s[0]: Ret5 (Rolling 5-bar return %)
-          - s[1]: Ret10 (Rolling 10-bar return %)
-          - s[2]: Ret20 (Rolling 20-bar return %)
-          - s[3]: Volat10 (Rolling 10-bar normalized volatility %)
-          - s[4]: DistSMA20 (Distance from SMA20 %)
-          - s[5]: Pos (-1.0 SHORT, 0.0 FLAT, 1.0 LONG)
-          - s[6]: MTF_Trend (Higher timeframe trend indicator -1.0 to 1.0)
-          - s[7]: News_Risk (Economic calendar proximity 0.0 to 1.0)
-        Output action_probs: [batch_size, 3]
-          - P(0: BUY), P(1: HOLD), P(2: SELL)
+        Input state_input: [batch_size, ${stateDim}]
+        Output action_probs: [batch_size, 3] -> P(0: BUY), P(1: HOLD), P(2: SELL)
         """
         x1 = self.act1(self.fc1(state_input))
         x1 = self.drop(x1)
         x1 = self.norm(x1)
         
         x2 = self.act2(self.fc2(x1))
-        # Residual connection
-        x2 = x2 + x1[:, :32] * 0.25
+        ${hasResidual ? `if ${hidden1} >= ${hidden2}:
+            x2 = x2 + x1[:, :${hidden2}] * 0.25` : '# Residual connection disabled'}
         
         logits = self.head(x2)
         return self.softmax(logits)
 
 def export_onnx_to_mt5():
     # Instantiate Model & Set to Evaluation Mode
-    model = FXForgeActorPolicy(state_dim=8, action_dim=3)
+    model = FXForgeActorPolicy(state_dim=${stateDim}, action_dim=3)
     model.eval()
 
-    # Dummy Input matching exact MT5 State Vector shape [1, 8] float32
-    dummy_state = torch.tensor([[0.45, 0.82, 1.15, 0.28, 0.35, 0.0, 0.75, 0.05]], dtype=torch.float32)
+    # Dummy Input matching exact MT5 State Vector shape [1, ${stateDim}] float32
+    dummy_state = torch.randn(1, ${stateDim}, dtype=torch.float32)
 
-    # Resolve MT5 Terminal Data Directory
-    appdata = os.getenv('APPDATA')
-    target_dirs = []
-    if appdata:
-        mt5_pattern = os.path.join(appdata, 'MetaQuotes', 'Terminal', '*', 'MQL5', 'Files')
-        target_dirs = glob.glob(mt5_pattern)
-
-    export_path = "rl_trading_model.onnx"
+    export_path = "${exportName}"
+    target_folder = "${targetFolder}"
+    opset_version = ${opsetVersion}
     
-    # Export via torch.onnx with Opset 14
+    # Export via torch.onnx with dynamic Opset
     torch.onnx.export(
         model,
         dummy_state,
         export_path,
         export_params=True,
-        opset_version=14,
+        opset_version=opset_version,
         do_constant_folding=True,
         input_names=['state_input'],
         output_names=['action_probs'],
-        dynamic_axes=None # Static shape [1, 8] for zero-latency execution
+        dynamic_axes=None # Static shape [1, ${stateDim}] for zero-latency execution
     )
-    print(f"[FXFORGE LAB] ONNX model successfully exported: {export_path}")
+    print(f"[FXFORGE LAB] ONNX model successfully exported: {export_path} (Opset {opset_version})")
 
-    # Copy to active MT5 MQL5/Files directory
-    for t_dir in target_dirs:
+    # Target Deployment Resolution (Dynamic Out Target)
+    if os.path.isabs(target_folder):
         try:
-            dest = os.path.join(t_dir, "rl_trading_model.onnx")
-            import shutil
+            os.makedirs(target_folder, exist_ok=True)
+            dest = os.path.join(target_folder, export_path)
             shutil.copyfile(export_path, dest)
-            print(f"[FXFORGE LAB] Auto-deployed to MT5 directory: {dest}")
+            print(f"[FXFORGE LAB] Auto-deployed to Target Folder: {dest}")
         except Exception as e:
-            print(f"[WARNING] Failed to copy to {t_dir}: {e}")
+            print(f"[WARNING] Failed to copy to {target_folder}: {e}")
+    else:
+        # Relative MT5 directory pattern search
+        clean_rel = target_folder.replace('\\\\', '/').strip('/')
+        appdata = os.getenv('APPDATA')
+        if appdata:
+            mt5_pattern = os.path.join(appdata, 'MetaQuotes', 'Terminal', '*', clean_rel)
+            matched_dirs = glob.glob(mt5_pattern)
+            for t_dir in matched_dirs:
+                try:
+                    os.makedirs(t_dir, exist_ok=True)
+                    dest = os.path.join(t_dir, export_path)
+                    shutil.copyfile(export_path, dest)
+                    print(f"[FXFORGE LAB] Auto-deployed to MT5 directory: {dest}")
+                except Exception as e:
+                    print(f"[WARNING] Failed to copy to {t_dir}: {e}")
 
 if __name__ == "__main__":
     export_onnx_to_mt5()
 `;
 }
 
-export function generateMql5SourceCode(): string {
+export function generateMql5SourceCode(spec?: Partial<ArchitectureSpec>): string {
+  const exportName = spec?.exportName || 'rl_trading_model.onnx';
+  const symbol = spec?.symbol || 'XAUUSD';
+  const tf = spec?.timeframe || 'M15';
+  const stateDim = spec?.inputDimension || 6;
+  const targetFolder = spec?.targetFolder || 'MQL5/Files/';
+  const tfEnum = `PERIOD_${tf.toUpperCase()}`;
+
   return `//+------------------------------------------------------------------+
 //|                                           FXForge_RL_Agent.mq5   |
 //|                       FXFORGE LAB - QUANTITATIVE AI & DEEP RL    |
 //|                   Institutional Production Engine for MT5        |
+//|                   Target Output: ${targetFolder}                 |
 //+------------------------------------------------------------------+
 #property copyright "FXFORGE LAB - Quantitative AI Architecture"
 #property link      "https://github.com/superman-owner/fxforge-lab"
@@ -118,13 +143,13 @@ export function generateMql5SourceCode(): string {
 #include <Trade\\Trade.mqh>
 CTrade trade;
 
-//--- ONNX Model Resource
-#resource "\\\\Files\\\\rl_trading_model.onnx" as uchar ExtOnnxModelBuffer[]
+//--- ONNX Model Resource Path (Target: ${targetFolder}${exportName})
+#resource "\\\\Files\\\\${exportName}" as uchar ExtOnnxModelBuffer[]
 
 //--- Input Parameters (Production Suite)
 input group "=== 1. AI POLICY & EXECUTION ===";
-input string   InpSymbol            = "XAUUSD";   // Symbol Asset
-input ENUM_TIMEFRAMES InpTimeframe  = PERIOD_M15; // Primary Timeframe
+input string   InpSymbol            = "${symbol}";   // Symbol Asset
+input ENUM_TIMEFRAMES InpTimeframe  = ${tfEnum}; // Primary Timeframe
 input ENUM_TIMEFRAMES InpHigherTF   = PERIOD_H4;  // Higher Context Timeframe
 input double   InpConfidenceThresh  = 0.55;       // Min Action Confidence (0.0-1.0)
 input ulong    InpMagicNumber       = 888666;     // EA Magic Number
@@ -165,8 +190,8 @@ int OnInit()
       return(INIT_FAILED);
    }
 
-   // 2. Set ONNX Input & Output Shapes: [1, 8] -> [1, 3]
-   const long in_shape[]  = {1, 8};
+   // 2. Set ONNX Input & Output Shapes: [1, ${stateDim}] -> [1, 3]
+   const long in_shape[]  = {1, ${stateDim}};
    const long out_shape[] = {1, 3};
 
    if(!OnnxSetInputShape(onnx_handle, 0, in_shape) || !OnnxSetOutputShape(onnx_handle, 0, out_shape))
@@ -181,7 +206,7 @@ int OnInit()
    atr_handle = iATR(InpSymbol, InpTimeframe, 14);
    higher_ma_handle = iMA(InpSymbol, InpHigherTF, 50, 0, MODE_EMA, PRICE_CLOSE);
 
-   Print("[FXFORGE LAB] Production Deep RL Policy Initialized. Opset 14 Tensor [1,8]->[1,3] Active.");
+   Print("[FXFORGE LAB] Production Deep RL Policy Initialized. Opset ${spec?.opsetVersion || 14} Tensor [1,${stateDim}]->[1,3] Active.");
    return(INIT_SUCCEEDED);
 }
 

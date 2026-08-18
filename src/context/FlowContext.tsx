@@ -9,6 +9,11 @@ export interface ArchitectureSpec {
   strategyPreset: string;
   totalEpisodes: number;
   
+  // Output & Deployment Target Configuration
+  targetFolder: string;
+  opsetVersion: number;
+  exportName: string;
+
   // Layer dimensions
   inputDimension: number;
   inputLabels: string[];
@@ -38,6 +43,9 @@ export const DEFAULT_ARCHITECTURE_SPEC: ArchitectureSpec = {
   barsCount: 10000,
   strategyPreset: 'Standard Quant',
   totalEpisodes: 400,
+  targetFolder: 'MQL5/Files/',
+  opsetVersion: 14,
+  exportName: 'rl_trading_model.onnx',
   inputDimension: 6,
   inputLabels: ['Ret (5d)', 'Ret (10d)', 'Ret (20d)', 'Vol (10d)', 'Dist SMA', 'Position'],
   hidden1Units: 64,
@@ -139,6 +147,19 @@ export function parseArchitecturePure(nodesList: Node[]): ArchitectureSpec {
 
       case 'fc3_policy_action_head':
         if (d.entropy_beta !== undefined) spec.entropyBeta = Number(d.entropy_beta) || 0.08;
+        break;
+
+      case 'onnx_mt5_compiler':
+      case 'export_onnx_compiler':
+        if (d.target_folder !== undefined || d.targetFolder !== undefined) {
+          spec.targetFolder = String(d.target_folder ?? d.targetFolder);
+        }
+        if (d.opset !== undefined || d.opset_version !== undefined || d.opsetVersion !== undefined) {
+          spec.opsetVersion = Number(d.opset ?? d.opset_version ?? d.opsetVersion) || 14;
+        }
+        if (d.export_name !== undefined || d.exportName !== undefined) {
+          spec.exportName = String(d.export_name ?? d.exportName);
+        }
         break;
 
       default:

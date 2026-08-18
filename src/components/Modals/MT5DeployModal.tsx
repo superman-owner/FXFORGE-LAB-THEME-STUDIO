@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import * as LucideIcons from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { useFlow } from '../../context/FlowContext';
 import { generatePythonOnnxScript, generateMql5SourceCode } from '../../services/onnxExporter';
 
 interface MT5DeployModalProps {
@@ -11,13 +12,14 @@ interface MT5DeployModalProps {
 export const MT5DeployModal: React.FC<MT5DeployModalProps> = ({ isOpen, onClose }) => {
   const { theme } = useTheme();
   const isLight = theme === 'light';
+  const { architectureSpec } = useFlow();
   const [activeTab, setActiveTab] = useState<'python' | 'mql5'>('python');
   const [copied, setCopied] = useState(false);
 
   if (!isOpen) return null;
 
-  const pythonCode = generatePythonOnnxScript();
-  const mql5Code = generateMql5SourceCode();
+  const pythonCode = generatePythonOnnxScript(architectureSpec);
+  const mql5Code = generateMql5SourceCode(architectureSpec);
   const currentCode = activeTab === 'python' ? pythonCode : mql5Code;
 
   const handleCopy = () => {
@@ -103,7 +105,7 @@ export const MT5DeployModal: React.FC<MT5DeployModalProps> = ({ isOpen, onClose 
                   isLight ? 'text-[#6b7280]' : 'text-[#86868b]'
                 }`}
               >
-                Opset 14 Static Tensor Shape <code className="font-sans font-semibold text-[11.5px]">[1, 6] float32</code> ➔ <code className="font-sans font-semibold text-[11.5px]">[1, 3] float32</code>
+                Target: <code className={`font-sans font-semibold text-[11.5px] ${isLight ? 'text-[#0071e3]' : 'text-[#0a84ff]'}`}>{architectureSpec.targetFolder || 'MQL5/Files/'}</code> │ Opset <code className="font-sans font-semibold text-[11.5px]">{architectureSpec.opsetVersion || 14}</code> │ Shape <code className="font-sans font-semibold text-[11.5px]">[1, {architectureSpec.inputDimension || 6}]</code> ➔ <code className="font-sans font-semibold text-[11.5px]">[1, 3]</code>
               </p>
             </div>
           </div>
