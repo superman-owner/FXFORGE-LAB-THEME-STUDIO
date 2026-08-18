@@ -250,7 +250,7 @@ export const TopNav: React.FC<TopNavProps> = ({
           className={`h-4 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/15' : 'bg-white/15'}`}
         />
 
-        {/* 2.  In-place Editable Project Name (FxDreema Style) */}
+        {/* 2.  Frameless In-place Editable Project Name (Pure Typography / Zero Border) */}
         <div
           style={{
             fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif',
@@ -262,23 +262,31 @@ export const TopNav: React.FC<TopNavProps> = ({
             type="text"
             value={editingName}
             onChange={(e) => setEditingName(e.target.value)}
-            onFocus={() => setIsEditing(true)}
+            onFocus={(e) => {
+              setIsEditing(true);
+              e.target.select();
+            }}
             onBlur={handleCommitRename}
             onKeyDown={handleKeyDown}
             placeholder="Untitled Project"
             style={{
-              width: `${Math.max(120, Math.min(300, (editingName || 'Untitled Project').length * 8.2 + 20))}px`,
+              width: `${Math.max(60, Math.min(360, (editingName || 'Untitled Project').length * 7.8 + 8))}px`,
+              background: 'transparent',
+              border: 'none',
+              outline: 'none',
+              boxShadow: 'none',
+              padding: '0 4px',
             }}
-            className={`h-7 px-2 rounded-[5px] text-[12.5px] font-semibold tracking-tight transition-all outline-none border cursor-text select-text ${
+            className={`h-7 text-[12.5px] font-semibold tracking-tight transition-colors cursor-text select-text ${
               isLight
                 ? isEditing
-                  ? 'bg-white border-[#0071e3] text-[#1d1d1f] shadow-sm ring-2 ring-[#0071e3]/20'
-                  : 'bg-transparent border-transparent text-[#1d1d1f] hover:bg-black/5 hover:border-black/10'
+                  ? 'text-[#0071e3]'
+                  : 'text-[#1d1d1f] hover:text-[#0071e3]'
                 : isEditing
-                ? 'bg-[#1c1c24] border-[#007aff] text-white shadow-sm ring-2 ring-[#007aff]/30'
-                : 'bg-transparent border-transparent text-white/90 hover:bg-white/8 hover:border-white/10'
+                ? 'text-[#007aff]'
+                : 'text-white/90 hover:text-white'
             }`}
-            title="Click to rename project directly (FxDreema style)"
+            title="Click to rename project directly (Borderless)"
           />
         </div>
       </div>
