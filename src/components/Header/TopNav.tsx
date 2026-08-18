@@ -79,115 +79,126 @@ export const TopNav: React.FC<TopNavProps> = ({
         {/*  Vertical Divider */}
         <div className={`h-4 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/15' : 'bg-white/15'}`} />
 
-        {/* FxDreema-Style Projects Dropdown Menu (Clean Menu Bar Style, Full 5 Items Visible) */}
+        {/*  macOS / Figma Native Style Projects Menu */}
         <div className="relative" ref={projectsMenuRef}>
           <button
             onClick={() => setIsProjectsOpen(!isProjectsOpen)}
-            className={`flex items-center gap-1.5 text-xs font-semibold transition-colors cursor-pointer select-none py-1 px-1.5 rounded-md ${
+            className={`flex items-center gap-1.5 text-xs font-medium transition-colors cursor-pointer select-none py-1 px-2 rounded-[5px] ${
               isProjectsOpen
                 ? isLight
-                  ? 'text-[#0071e3]'
-                  : 'text-[#007aff]'
+                  ? 'bg-black/8 text-[#0071e3]'
+                  : 'bg-white/12 text-white'
                 : isLight
-                ? 'text-[#1d1d1f] hover:text-[#0071e3]'
-                : 'text-white/90 hover:text-white'
+                ? 'text-[#1d1d1f] hover:bg-black/5'
+                : 'text-white/85 hover:bg-white/8 hover:text-white'
             }`}
           >
-            <LucideIcons.FolderKanban size={13} className="text-[#007aff]" />
             <span>Projects</span>
-            <LucideIcons.ChevronDown size={11} className={`transition-transform duration-150 opacity-60 ${isProjectsOpen ? 'rotate-180' : ''}`} />
+            <LucideIcons.ChevronDown size={10} className={`transition-transform duration-150 opacity-60 ${isProjectsOpen ? 'rotate-180' : ''}`} />
           </button>
 
           {isProjectsOpen && (
             <div
               style={{
-                borderRadius: '8px',
+                borderRadius: '6px',
+                fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, sans-serif',
               }}
-              className={`absolute left-0 top-[calc(100%+6px)] w-72 border shadow-2xl p-1.5 z-50 backdrop-blur-2xl animate-in fade-in duration-150 ${
+              className={`absolute left-0 top-[calc(100%+4px)] w-60 p-[4px] z-50 backdrop-blur-2xl backdrop-saturate-150 animate-in fade-in duration-100 select-none shadow-[0_16px_40px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.08)] ${
                 isLight
-                  ? 'bg-white/98 border-black/12 text-[#1d1d1f] shadow-[0_12px_32px_rgba(0,0,0,0.12)]'
-                  : 'bg-[#151520]/98 border-white/15 text-white shadow-[0_20px_50px_rgba(0,0,0,0.85)]'
+                  ? 'bg-[#f6f6f6]/92 border border-black/10 text-[#1d1d1f]'
+                  : 'bg-[#26262c]/88 border border-white/[0.12] text-[#f5f5f7]'
               }`}
             >
-              {/* 1. ➕ New Project (Top) */}
+              {/* 1. New Project */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onNewProject?.();
                 }}
-                className={`w-full px-3.5 py-2 rounded-md text-xs font-medium flex items-center justify-between transition-colors cursor-pointer text-left ${
-                  isLight ? 'hover:bg-black/5 text-[#1d1d1f]' : 'hover:bg-white/10 text-white/95'
+                className={`group w-full px-2.5 py-[3px] rounded-[4px] text-[12.5px] font-normal flex items-center justify-between transition-colors cursor-pointer text-left ${
+                  isLight
+                    ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
+                    : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
                 }`}
               >
-                <div className="flex items-center gap-3">
-                  <LucideIcons.FilePlus size={15} className="text-[#30d158] flex-shrink-0" />
-                  <span className="font-semibold text-[12.5px]">New Project</span>
-                </div>
-                <span className={`text-[11px] font-mono pr-1.5 tracking-wider ${isLight ? 'text-black/45' : 'text-white/45'}`}>⌘N</span>
+                <span>New Project</span>
+                <span className={`text-[11.5px] font-mono tracking-wider transition-colors ${
+                  isLight ? 'text-black/40 group-hover:text-white' : 'text-white/45 group-hover:text-white'
+                }`}>⌘N</span>
               </button>
 
-              {/* 2. 📂 Load Project... */}
+              {/* 2. Load Project... */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onOpenProjectManager?.();
                 }}
-                className={`w-full px-3.5 py-2 rounded-md text-xs font-medium flex items-center justify-between transition-colors cursor-pointer text-left ${
-                  isLight ? 'hover:bg-black/5 text-[#1d1d1f]' : 'hover:bg-white/10 text-white/95'
+                className={`group w-full px-2.5 py-[3px] rounded-[4px] text-[12.5px] font-normal flex items-center justify-between transition-colors cursor-pointer text-left ${
+                  isLight
+                    ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
+                    : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
                 }`}
               >
-                <div className="flex items-center gap-3">
-                  <LucideIcons.FolderOpen size={15} className="text-[#007aff] flex-shrink-0" />
-                  <span className="font-semibold text-[12.5px]">Load Project...</span>
-                </div>
-                <span className={`text-[11px] font-mono pr-1.5 tracking-wider ${isLight ? 'text-black/45' : 'text-white/45'}`}>⌘O</span>
+                <span>Load Project...</span>
+                <span className={`text-[11.5px] font-mono tracking-wider transition-colors ${
+                  isLight ? 'text-black/40 group-hover:text-white' : 'text-white/45 group-hover:text-white'
+                }`}>⌘O</span>
               </button>
 
-              {/* 3. 💾 Save Project... */}
+              {/* 3. Save Project... */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onOpenSaveProject?.();
                 }}
-                className={`w-full px-3.5 py-2 rounded-md text-xs font-medium flex items-center justify-between transition-colors cursor-pointer text-left ${
-                  isLight ? 'hover:bg-black/5 text-[#1d1d1f]' : 'hover:bg-white/10 text-white/95'
+                className={`group w-full px-2.5 py-[3px] rounded-[4px] text-[12.5px] font-normal flex items-center justify-between transition-colors cursor-pointer text-left ${
+                  isLight
+                    ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
+                    : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
                 }`}
               >
-                <div className="flex items-center gap-3">
-                  <LucideIcons.Save size={15} className="text-[#00c7be] flex-shrink-0" />
-                  <span className="text-[12.5px]">Save Project...</span>
-                </div>
-                <span className={`text-[11px] font-mono pr-1.5 tracking-wider ${isLight ? 'text-black/45' : 'text-white/45'}`}>⌘S</span>
+                <span>Save Project...</span>
+                <span className={`text-[11.5px] font-mono tracking-wider transition-colors ${
+                  isLight ? 'text-black/40 group-hover:text-white' : 'text-white/45 group-hover:text-white'
+                }`}>⌘S</span>
               </button>
 
-              <div className={`my-1 mx-2 h-[1px] ${isLight ? 'bg-black/8' : 'bg-white/10'}`} />
+              <div className={`my-[4px] mx-1 h-[1px] ${isLight ? 'bg-black/[0.08]' : 'bg-white/[0.08]'}`} />
 
-              {/* 4. 📥 Import Project (.json) */}
+              {/* 4. Import Project (.json) */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onImportProject?.();
                 }}
-                className={`w-full px-3.5 py-2 rounded-md text-xs font-medium flex items-center gap-3 transition-colors cursor-pointer text-left ${
-                  isLight ? 'hover:bg-black/5 text-[#1d1d1f]' : 'hover:bg-white/10 text-white/90'
+                className={`group w-full px-2.5 py-[3px] rounded-[4px] text-[12.5px] font-normal flex items-center justify-between transition-colors cursor-pointer text-left ${
+                  isLight
+                    ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
+                    : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
                 }`}
               >
-                <LucideIcons.Upload size={15} className="text-[#bf5af2] flex-shrink-0" />
-                <span className="text-[12.5px]">Import Project (.json)</span>
+                <span>Import Project (.json)</span>
+                <span className={`text-[11.5px] font-mono tracking-wider transition-colors ${
+                  isLight ? 'text-black/40 group-hover:text-white' : 'text-white/45 group-hover:text-white'
+                }`}>⌥⌘I</span>
               </button>
 
-              {/* 5. 📤 Export Project (.json) */}
+              {/* 5. Export Project (.json) */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onExportProject?.();
                 }}
-                className={`w-full px-3.5 py-2 rounded-md text-xs font-medium flex items-center gap-3 transition-colors cursor-pointer text-left ${
-                  isLight ? 'hover:bg-black/5 text-[#1d1d1f]' : 'hover:bg-white/10 text-white/90'
+                className={`group w-full px-2.5 py-[3px] rounded-[4px] text-[12.5px] font-normal flex items-center justify-between transition-colors cursor-pointer text-left ${
+                  isLight
+                    ? 'hover:bg-[#0071e3] hover:text-white text-[#1d1d1f]'
+                    : 'hover:bg-[#007aff] hover:text-white text-[#f5f5f7]'
                 }`}
               >
-                <LucideIcons.Download size={15} className="text-[#64d2ff] flex-shrink-0" />
-                <span className="text-[12.5px]">Export Project (.json)</span>
+                <span>Export Project (.json)</span>
+                <span className={`text-[11.5px] font-mono tracking-wider transition-colors ${
+                  isLight ? 'text-black/40 group-hover:text-white' : 'text-white/45 group-hover:text-white'
+                }`}>⌥⌘E</span>
               </button>
             </div>
           )}
