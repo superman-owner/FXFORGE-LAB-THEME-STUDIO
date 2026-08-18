@@ -100,10 +100,10 @@ export const TopNav: React.FC<TopNavProps> = ({
 
           {isProjectsOpen && (
             <div
-              className={`absolute left-0 top-full mt-1.5 w-60 rounded-2xl border shadow-2xl py-1.5 z-50 backdrop-blur-3xl animate-in fade-in zoom-in-95 duration-150 ${
+              className={`absolute left-0 top-full mt-1.5 w-64 rounded-xl border shadow-2xl p-1.5 z-50 backdrop-blur-3xl animate-in fade-in zoom-in-95 duration-150 ${
                 isLight
-                  ? 'bg-white/98 border-black/10 text-[#1d1d1f] shadow-[0_15px_40px_rgba(0,0,0,0.18)]'
-                  : 'bg-[#161622]/98 border-white/12 text-white shadow-[0_20px_50px_rgba(0,0,0,0.85)]'
+                  ? 'bg-white/98 border-black/10 text-[#1d1d1f] shadow-[0_12px_36px_rgba(0,0,0,0.15)]'
+                  : 'bg-[#161622]/98 border-white/14 text-white shadow-[0_20px_50px_rgba(0,0,0,0.85)]'
               }`}
             >
               {/* 1. ➕ New Project (Top) */}
@@ -112,13 +112,15 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onNewProject?.();
                 }}
-                className={`w-full px-3.5 py-2 text-xs font-medium flex items-center gap-2.5 transition-colors cursor-pointer text-left ${
-                  isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
+                className={`w-full px-3 py-1.5 rounded-md text-xs font-medium flex items-center justify-between transition-colors cursor-pointer text-left ${
+                  isLight ? 'hover:bg-black/5 text-[#1d1d1f]' : 'hover:bg-white/10 text-white/95'
                 }`}
               >
-                <LucideIcons.FilePlus size={14} className="text-[#30d158] flex-shrink-0" />
-                <span className="flex-1 font-semibold">New Project</span>
-                <span className="text-[10px] opacity-40 font-mono">⌘N</span>
+                <div className="flex items-center gap-2.5">
+                  <LucideIcons.FilePlus size={14} className="text-[#30d158] flex-shrink-0" />
+                  <span className="font-semibold">New Project</span>
+                </div>
+                <span className={`text-[11px] font-mono tracking-wider ${isLight ? 'text-black/40' : 'text-white/40'}`}>⌘N</span>
               </button>
 
               {/* 2. 📂 Load Project... */}
@@ -127,13 +129,15 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onOpenProjectManager?.();
                 }}
-                className={`w-full px-3.5 py-2 text-xs font-medium flex items-center gap-2.5 transition-colors cursor-pointer text-left ${
-                  isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
+                className={`w-full px-3 py-1.5 rounded-md text-xs font-medium flex items-center justify-between transition-colors cursor-pointer text-left ${
+                  isLight ? 'hover:bg-black/5 text-[#1d1d1f]' : 'hover:bg-white/10 text-white/95'
                 }`}
               >
-                <LucideIcons.FolderOpen size={14} className="text-[#007aff] flex-shrink-0" />
-                <span className="flex-1 font-semibold">Load Project...</span>
-                <span className="text-[10px] opacity-40 font-mono">⌘O</span>
+                <div className="flex items-center gap-2.5">
+                  <LucideIcons.FolderOpen size={14} className="text-[#007aff] flex-shrink-0" />
+                  <span className="font-semibold">Load Project...</span>
+                </div>
+                <span className={`text-[11px] font-mono tracking-wider ${isLight ? 'text-black/40' : 'text-white/40'}`}>⌘O</span>
               </button>
 
               {/* 3. 💾 Save Project... */}
@@ -142,16 +146,18 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onOpenSaveProject?.();
                 }}
-                className={`w-full px-3.5 py-2 text-xs font-medium flex items-center gap-2.5 transition-colors cursor-pointer text-left ${
-                  isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
+                className={`w-full px-3 py-1.5 rounded-md text-xs font-medium flex items-center justify-between transition-colors cursor-pointer text-left ${
+                  isLight ? 'hover:bg-black/5 text-[#1d1d1f]' : 'hover:bg-white/10 text-white/95'
                 }`}
               >
-                <LucideIcons.Save size={14} className="text-[#00c7be] flex-shrink-0" />
-                <span className="flex-1">Save Project...</span>
-                <span className="text-[10px] opacity-40 font-mono">⌘S</span>
+                <div className="flex items-center gap-2.5">
+                  <LucideIcons.Save size={14} className="text-[#00c7be] flex-shrink-0" />
+                  <span>Save Project...</span>
+                </div>
+                <span className={`text-[11px] font-mono tracking-wider ${isLight ? 'text-black/40' : 'text-white/40'}`}>⌘S</span>
               </button>
 
-              <div className={`my-1 h-[1px] ${isLight ? 'bg-black/8' : 'bg-white/10'}`} />
+              <div className={`my-1 mx-1.5 h-[1px] ${isLight ? 'bg-black/8' : 'bg-white/10'}`} />
 
               {/* 4. 📥 Import Project (.json) */}
               <button
@@ -159,12 +165,12 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onImportProject?.();
                 }}
-                className={`w-full px-3.5 py-2 text-xs font-medium flex items-center gap-2.5 transition-colors cursor-pointer text-left ${
-                  isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
+                className={`w-full px-3 py-1.5 rounded-md text-xs font-medium flex items-center gap-2.5 transition-colors cursor-pointer text-left ${
+                  isLight ? 'hover:bg-black/5 text-[#1d1d1f]' : 'hover:bg-white/10 text-white/90'
                 }`}
               >
                 <LucideIcons.Upload size={14} className="text-[#bf5af2] flex-shrink-0" />
-                <span className="flex-1">Import Project (.json)</span>
+                <span>Import Project (.json)</span>
               </button>
 
               {/* 5. 📤 Export Project (.json) */}
@@ -173,12 +179,12 @@ export const TopNav: React.FC<TopNavProps> = ({
                   setIsProjectsOpen(false);
                   onExportProject?.();
                 }}
-                className={`w-full px-3.5 py-2 text-xs font-medium flex items-center gap-2.5 transition-colors cursor-pointer text-left ${
-                  isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
+                className={`w-full px-3 py-1.5 rounded-md text-xs font-medium flex items-center gap-2.5 transition-colors cursor-pointer text-left ${
+                  isLight ? 'hover:bg-black/5 text-[#1d1d1f]' : 'hover:bg-white/10 text-white/90'
                 }`}
               >
                 <LucideIcons.Download size={14} className="text-[#64d2ff] flex-shrink-0" />
-                <span className="flex-1">Export Project (.json)</span>
+                <span>Export Project (.json)</span>
               </button>
             </div>
           )}
