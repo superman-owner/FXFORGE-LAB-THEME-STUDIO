@@ -20,6 +20,7 @@ interface TopNavProps {
   onExportProject?: () => void;
   onImportProject?: () => void;
   projectName?: string;
+  onProjectNameChange?: (name: string) => void;
 }
 
 export const TopNav: React.FC<TopNavProps> = ({
@@ -38,11 +39,40 @@ export const TopNav: React.FC<TopNavProps> = ({
   onExportProject,
   onImportProject,
   projectName = 'Untitled Project',
+  onProjectNameChange,
 }) => {
   const { theme, toggleTheme } = useTheme();
   const isLight = theme === 'light';
   const [isProjectsOpen, setIsProjectsOpen] = React.useState(false);
   const projectsMenuRef = React.useRef<HTMLDivElement>(null);
+
+  // In-place inline rename state (FxDreema style)
+  const [editingName, setEditingName] = React.useState(projectName);
+  const [isEditing, setIsEditing] = React.useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    setEditingName(projectName);
+  }, [projectName]);
+
+  const handleCommitRename = () => {
+    setIsEditing(false);
+    const trimmed = editingName.trim();
+    const finalName = trimmed || 'Untitled Project';
+    setEditingName(finalName);
+    if (finalName !== projectName) {
+      onProjectNameChange?.(finalName);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      inputRef.current?.blur();
+    } else if (e.key === 'Escape') {
+      setEditingName(projectName);
+      setIsEditing(false);
+    }
+  };
 
   React.useEffect(() => {
     if (!isProjectsOpen) return;
@@ -220,23 +250,36 @@ export const TopNav: React.FC<TopNavProps> = ({
           className={`h-4 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/15' : 'bg-white/15'}`}
         />
 
-        {/* 2.  Active Project Name Display */}
+        {/* 2.  In-place Editable Project Name (FxDreema Style) */}
         <div
           style={{
             fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif',
           }}
-          className={`flex items-center gap-1.5 px-2 py-0.5 rounded-[5px] text-[12.5px] font-medium transition-colors select-none ${
-            isLight ? 'text-[#1d1d1f]' : 'text-white/90'
-          }`}
-          title={`Active Project: ${projectName || 'Untitled Project'}`}
+          className="relative flex items-center"
         >
-          <LucideIcons.FileCode
-            size={13}
-            className={isLight ? 'text-[#0071e3]' : 'text-[#007aff]'}
+          <input
+            ref={inputRef}
+            type="text"
+            value={editingName}
+            onChange={(e) => setEditingName(e.target.value)}
+            onFocus={() => setIsEditing(true)}
+            onBlur={handleCommitRename}
+            onKeyDown={handleKeyDown}
+            placeholder="Untitled Project"
+            style={{
+              width: `${Math.max(120, Math.min(300, (editingName || 'Untitled Project').length * 8.2 + 20))}px`,
+            }}
+            className={`h-7 px-2 rounded-[5px] text-[12.5px] font-semibold tracking-tight transition-all outline-none border cursor-text select-text ${
+              isLight
+                ? isEditing
+                  ? 'bg-white border-[#0071e3] text-[#1d1d1f] shadow-sm ring-2 ring-[#0071e3]/20'
+                  : 'bg-transparent border-transparent text-[#1d1d1f] hover:bg-black/5 hover:border-black/10'
+                : isEditing
+                ? 'bg-[#1c1c24] border-[#007aff] text-white shadow-sm ring-2 ring-[#007aff]/30'
+                : 'bg-transparent border-transparent text-white/90 hover:bg-white/8 hover:border-white/10'
+            }`}
+            title="Click to rename project directly (FxDreema style)"
           />
-          <span className="font-semibold tracking-tight max-w-[240px] truncate">
-            {projectName || 'Untitled Project'}
-          </span>
         </div>
       </div>
 

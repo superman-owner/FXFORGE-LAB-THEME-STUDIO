@@ -305,6 +305,10 @@ function AppContent() {
         onExportProject={handleExportProjectDirect}
         onImportProject={() => fileImportInputRef.current?.click()}
         projectName={currentProjectName}
+        onProjectNameChange={(newName) => {
+          setCurrentProjectName(newName);
+          setLogs((prev) => [...prev, `[STUDIO] Renamed project to "${newName}".`]);
+        }}
       />
 
       {/*  Main Quantum Visualizer & Flow DAG Stage with Shared Left Sidebar */}
@@ -355,6 +359,7 @@ function AppContent() {
       <SaveProjectModal
         isOpen={isSaveProjectOpen}
         onClose={() => setIsSaveProjectOpen(false)}
+        defaultProjectName={currentProjectName}
         onSaved={(saved: SavedProject) => {
           setCurrentProjectName(saved.name);
           setLogs((prev) => [...prev, `[STUDIO] Saved project "${saved.name}" (${saved.id}) successfully.`]);

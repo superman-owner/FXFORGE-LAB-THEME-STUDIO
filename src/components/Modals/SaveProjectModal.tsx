@@ -9,22 +9,30 @@ interface SaveProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSaved: (project: SavedProject) => void;
+  defaultProjectName?: string;
 }
 
 export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
   isOpen,
   onClose,
   onSaved,
+  defaultProjectName = 'Untitled Project',
 }) => {
   const { theme } = useTheme();
   const isLight = theme === 'light';
   const { nodes, edges, architectureSpec } = useFlow();
 
-  const [projectName, setProjectName] = useState('My Custom Quant Strategy');
+  const [projectName, setProjectName] = useState(defaultProjectName);
   const [projectType, setProjectType] = useState<SavedProject['type']>('Deep RL Policy');
   const [symbol, setSymbol] = useState(architectureSpec?.symbol || 'XAUUSD');
   const [timeframe, setTimeframe] = useState(architectureSpec?.timeframe || 'M15');
   const [description, setDescription] = useState('Visual Reinforcement Learning Pipeline with Dynamic Actor-Critic NN');
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setProjectName(defaultProjectName || 'Untitled Project');
+    }
+  }, [isOpen, defaultProjectName]);
 
   if (!isOpen) return null;
 
