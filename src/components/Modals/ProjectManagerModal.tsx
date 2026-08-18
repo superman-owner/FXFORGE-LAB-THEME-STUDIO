@@ -71,7 +71,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
     showToast(`Loaded "${proj.name}" successfully!`);
     setTimeout(() => {
       onClose();
-    }, 450);
+    }, 400);
   };
 
   const handleDelete = (id: string, name: string) => {
@@ -91,7 +91,6 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
   };
 
   const handleExport = (proj: SavedProject) => {
-    // If project has no nodes saved, export current canvas nodes
     const toExport = {
       ...proj,
       nodes: proj.nodes && proj.nodes.length > 0 ? proj.nodes : nodes,
@@ -129,34 +128,42 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-xl animate-in fade-in duration-200">
       <div
-        className={`w-full max-w-5xl max-h-[88vh] rounded-3xl border shadow-2xl flex flex-col overflow-hidden transition-all duration-200 ${
+        className={`w-full max-w-6xl max-h-[88vh] rounded-2xl border shadow-2xl flex flex-col overflow-hidden transition-all duration-200 ${
           isLight
-            ? 'bg-white/95 border-black/10 text-[#1d1d1f] shadow-[0_20px_60px_rgba(0,0,0,0.15)]'
-            : 'bg-[#101018]/95 border-white/10 text-white shadow-[0_25px_70px_rgba(0,0,0,0.8)] backdrop-blur-2xl'
+            ? 'bg-[#ffffff]/95 border-black/10 text-[#1d1d1f] shadow-[0_25px_70px_rgba(0,0,0,0.18)]'
+            : 'bg-[#16161e]/95 border-white/12 text-white shadow-[0_30px_90px_rgba(0,0,0,0.85)] backdrop-blur-3xl'
         }`}
       >
-        {/* Modal Header Bar */}
-        <div className={`px-6 py-4 border-b flex items-center justify-between flex-shrink-0 ${isLight ? 'border-black/[0.08]' : 'border-white/[0.08]'}`}>
-          <div className="flex items-center gap-3">
-            <div className={`w-9 h-9 rounded-2xl flex items-center justify-center ${isLight ? 'bg-[#0071e3]/10 text-[#0071e3]' : 'bg-[#007aff]/15 text-[#007aff]'}`}>
-              <LucideIcons.FolderKanban size={20} strokeWidth={2.2} />
+        {/*  macOS Native Header Bar */}
+        <div className={`px-6 py-4 border-b flex items-center justify-between flex-shrink-0 ${isLight ? 'border-black/[0.08] bg-black/[0.02]' : 'border-white/[0.08] bg-white/[0.02]'}`}>
+          <div className="flex items-center gap-4">
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isLight ? 'bg-[#0071e3]/10 text-[#0071e3]' : 'bg-[#007aff]/15 text-[#007aff]'}`}>
+              <LucideIcons.FolderKanban size={22} strokeWidth={2.2} />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <h2 className="text-base font-bold tracking-tight">Load Project</h2>
-                <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${isLight ? 'bg-black/5 text-[#6e6e73]' : 'bg-white/10 text-white/60'}`}>
+                <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold ${isLight ? 'bg-black/5 text-[#6e6e73]' : 'bg-white/10 text-white/70'}`}>
                   {projects.length} Saved Strategies
                 </span>
               </div>
-              <p className={`text-xs ${isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}`}>
-                Manage, load, duplicate, import and export your Quant DAG pipelines (FxDreema Studio Engine)
-              </p>
+              
+              {/* Host Machine Profile / Status Indicator */}
+              <div className="flex items-center gap-2 mt-0.5 text-xs select-none">
+                <span className={`font-medium ${isLight ? 'text-[#86868b]' : 'text-[#86868b]'}`}>Alessandro Mingione</span>
+                <span className={isLight ? 'text-black/20' : 'text-white/20'}>·</span>
+                <div className="flex items-center gap-1.5 font-mono text-[11px]">
+                  <span className="w-2 h-2 rounded-full bg-[#30d158] shadow-[0_0_6px_#30d158] inline-block" />
+                  <span className={isLight ? 'text-[#1d1d1f] font-semibold' : 'text-[#f5f5f7] font-semibold'}>alessandros-macbook-pro-2</span>
+                  <span className="text-[11px]">🖥️</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Action Buttons & Close */}
+          {/* Action Toolbar & Close Button */}
           <div className="flex items-center gap-2.5">
             <input
               type="file"
@@ -167,10 +174,10 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
                 isLight
-                  ? 'border-black/10 bg-black/5 hover:bg-black/10 text-[#1d1d1f]'
-                  : 'border-white/10 bg-white/5 hover:bg-white/10 text-white'
+                  ? 'border-black/10 bg-white hover:bg-black/5 text-[#1d1d1f] shadow-sm'
+                  : 'border-white/12 bg-white/5 hover:bg-white/10 text-white'
               }`}
               title="Import Project (.json / .xml)"
             >
@@ -183,7 +190,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                 onClose();
                 onOpenSaveModal();
               }}
-              className="px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 bg-[#007aff] hover:bg-[#0071e3] text-white shadow-[0_2px_8px_rgba(0,122,255,0.4)] cursor-pointer transition-all"
+              className="px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 bg-[#007aff] hover:bg-[#0071e3] text-white shadow-[0_2px_8px_rgba(0,122,255,0.4)] cursor-pointer transition-all active:scale-95"
             >
               <LucideIcons.Save size={13} />
               <span>Save Current Graph</span>
@@ -191,19 +198,19 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
 
             <button
               onClick={onClose}
-              className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
+              className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors cursor-pointer ml-1 ${
                 isLight ? 'hover:bg-black/5 text-[#6e6e73] hover:text-[#1d1d1f]' : 'hover:bg-white/10 text-[#86868b] hover:text-white'
               }`}
             >
-              <LucideIcons.X size={18} />
+              <LucideIcons.X size={16} />
             </button>
           </div>
         </div>
 
         {/* Search Bar & Toolbar */}
-        <div className={`px-6 py-3 border-b flex items-center justify-between gap-4 flex-shrink-0 ${isLight ? 'bg-[#f5f5f7] border-black/[0.06]' : 'bg-[#0a0a10] border-white/[0.06]'}`}>
-          <div className="relative flex-1 max-w-md">
-            <LucideIcons.Search size={14} className={`absolute left-3 top-1/2 -translate-y-1/2 ${isLight ? 'text-[#8e8e93]' : 'text-[#636366]'}`} />
+        <div className={`px-6 py-2.5 border-b flex items-center justify-between gap-4 flex-shrink-0 ${isLight ? 'bg-[#f5f5f7] border-black/[0.06]' : 'bg-[#101018] border-white/[0.06]'}`}>
+          <div className="relative flex-1 max-w-lg">
+            <LucideIcons.Search size={14} className={`absolute left-3.5 top-1/2 -translate-y-1/2 ${isLight ? 'text-[#8e8e93]' : 'text-white/40'}`} />
             <input
               type="text"
               value={searchQuery}
@@ -211,8 +218,8 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
               placeholder="Search by ID, name, asset, language (e.g. GRID, MQL5, XAUUSD)..."
               className={`w-full pl-9 pr-4 py-1.5 text-xs rounded-xl border transition-all focus:outline-none ${
                 isLight
-                  ? 'bg-white border-black/10 text-[#1d1d1f] focus:border-[#0071e3] focus:ring-2 focus:ring-[#0071e3]/20'
-                  : 'bg-white/5 border-white/10 text-white focus:border-[#007aff] focus:ring-2 focus:ring-[#007aff]/20'
+                  ? 'bg-white border-black/12 text-[#1d1d1f] placeholder:text-[#8e8e93] focus:border-[#0071e3] focus:ring-2 focus:ring-[#0071e3]/20'
+                  : 'bg-white/[0.07] border-white/14 text-white placeholder:text-white/40 focus:border-[#007aff] focus:bg-white/[0.10] focus:ring-2 focus:ring-[#007aff]/25'
               }`}
             />
           </div>
@@ -225,10 +232,10 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                   onNewProject();
                 }
               }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
                 isLight
                   ? 'border-black/10 bg-white hover:bg-black/5 text-[#1d1d1f]'
-                  : 'border-white/10 bg-white/5 hover:bg-white/10 text-white'
+                  : 'border-white/12 bg-white/5 hover:bg-white/10 text-white'
               }`}
             >
               <LucideIcons.FilePlus size={13} className="text-[#30d158]" />
@@ -250,28 +257,28 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
           </div>
         )}
 
-        {/* FxDreema-Style Interactive Projects Table */}
+        {/*  FxDreema-Style Interactive Projects Table */}
         <div className="flex-1 overflow-y-auto min-h-0">
           <table className="w-full text-left text-xs border-collapse">
-            <thead className={`sticky top-0 z-10 select-none ${isLight ? 'bg-[#f5f5f7] text-[#6e6e73]' : 'bg-[#0d0d14] text-[#86868b]'}`}>
-              <tr className="border-b border-black/[0.06] dark:border-white/[0.06]">
-                <th className="py-2.5 px-4 font-semibold w-[90px] text-center">Action</th>
-                <th className="py-2.5 px-3 font-semibold w-[90px]">ID</th>
-                <th className="py-2.5 px-3 font-semibold w-[130px]">Type</th>
-                <th className="py-2.5 px-3 font-semibold w-[100px]">Language</th>
-                <th className="py-2.5 px-4 font-semibold">Project Name & Description</th>
-                <th className="py-2.5 px-3 font-semibold w-[140px]">Created</th>
-                <th className="py-2.5 px-3 font-semibold w-[140px]">Modified</th>
-                <th className="py-2.5 px-4 font-semibold w-[110px] text-right">Manage</th>
+            <thead className={`sticky top-0 z-10 select-none ${isLight ? 'bg-[#f5f5f7] text-[#6e6e73]' : 'bg-[#12121a] text-[#86868b]'}`}>
+              <tr className="border-b border-black/[0.08] dark:border-white/[0.08]">
+                <th className="py-2.5 px-4 font-bold w-[85px] text-center whitespace-nowrap">Action</th>
+                <th className="py-2.5 px-3 font-bold w-[95px] whitespace-nowrap">ID</th>
+                <th className="py-2.5 px-3 font-bold w-[145px] whitespace-nowrap">Type</th>
+                <th className="py-2.5 px-3 font-bold w-[105px] whitespace-nowrap">Language</th>
+                <th className="py-2.5 px-4 font-bold whitespace-nowrap">Project Name & Description</th>
+                <th className="py-2.5 px-3 font-bold w-[145px] whitespace-nowrap">Created</th>
+                <th className="py-2.5 px-3 font-bold w-[145px] whitespace-nowrap">Modified</th>
+                <th className="py-2.5 px-4 font-bold w-[110px] text-right whitespace-nowrap">Manage</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-black/[0.04] dark:divide-white/[0.04]">
               {filteredProjects.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-[#86868b]">
-                    <LucideIcons.FolderSearch size={32} className="mx-auto mb-2 opacity-40" />
-                    <p className="font-semibold text-sm">No projects found</p>
-                    <p className="text-xs mt-1">Try another search or save the current graph as a new project.</p>
+                  <td colSpan={8} className="py-14 text-center text-[#86868b]">
+                    <LucideIcons.FolderSearch size={36} className="mx-auto mb-2 opacity-30" />
+                    <p className="font-bold text-sm">No projects found</p>
+                    <p className="text-xs mt-1 opacity-75">Try another search or save the current graph as a new project.</p>
                   </td>
                 </tr>
               ) : (
@@ -283,41 +290,43 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                       className={`transition-colors group ${
                         isActive
                           ? isLight
-                            ? 'bg-[#0071e3]/5'
-                            : 'bg-[#007aff]/10'
+                            ? 'bg-[#0071e3]/8'
+                            : 'bg-[#007aff]/15'
                           : isLight
-                          ? 'hover:bg-black/[0.02]'
-                          : 'hover:bg-white/[0.02]'
+                          ? 'hover:bg-black/[0.03]'
+                          : 'hover:bg-white/[0.03]'
                       }`}
                     >
-                      {/* Load Button (FxDreema Style) */}
-                      <td className="py-3 px-4 text-center">
+                      {/* Load Button (Crisp Apple Pro Pill) */}
+                      <td className="py-2.5 px-4 text-center">
                         <button
                           onClick={() => handleLoad(proj)}
-                          className="px-3.5 py-1 rounded-lg text-xs font-bold text-white bg-[#30d158] hover:bg-[#28cd41] shadow-[0_2px_6px_rgba(48,209,88,0.35)] cursor-pointer transition-all active:scale-95"
+                          className="px-3.5 py-1 rounded-md text-[11px] font-bold text-black bg-[#30d158] hover:bg-[#28cd41] shadow-[0_1px_4px_rgba(48,209,88,0.4)] cursor-pointer transition-all active:scale-95"
                         >
                           Load
                         </button>
                       </td>
 
                       {/* ID */}
-                      <td className="py-3 px-3 font-mono font-medium text-[11px]">
+                      <td className="py-2.5 px-3 font-mono font-semibold text-[11px] whitespace-nowrap">
                         <span className={isLight ? 'text-[#0071e3]' : 'text-[#64d2ff]'}>{proj.id}</span>
                       </td>
 
-                      {/* Type Badge */}
-                      <td className="py-3 px-3">
+                      {/* Type Badge (Guaranteed No Wrap) */}
+                      <td className="py-2.5 px-3 whitespace-nowrap">
                         <span
-                          className={`inline-block px-2 py-0.5 rounded-md text-[10.5px] font-semibold ${
+                          className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10.5px] font-semibold whitespace-nowrap border ${
                             proj.type === 'Deep RL Policy'
-                              ? 'bg-[#bf5af2]/15 text-[#bf5af2]'
+                              ? 'bg-[#bf5af2]/15 text-[#bf5af2] border-[#bf5af2]/25'
                               : proj.type === 'Grid Intelligence'
-                              ? 'bg-[#30d158]/15 text-[#30d158]'
+                              ? 'bg-[#30d158]/15 text-[#30d158] border-[#30d158]/25'
                               : proj.type === 'BPNN Scalper'
-                              ? 'bg-[#ff9f0a]/15 text-[#ff9f0a]'
+                              ? 'bg-[#ff9f0a]/15 text-[#ff9f0a] border-[#ff9f0a]/25'
                               : proj.type === 'Multi-TF Matrix'
-                              ? 'bg-[#0a84ff]/15 text-[#0a84ff]'
-                              : 'bg-white/10 text-white/80'
+                              ? 'bg-[#0a84ff]/15 text-[#0a84ff] border-[#0a84ff]/25'
+                              : proj.type === 'Risk Manager'
+                              ? 'bg-[#ff453a]/15 text-[#ff453a] border-[#ff453a]/25'
+                              : 'bg-white/10 text-white/90 border-white/15'
                           }`}
                         >
                           {proj.type}
@@ -325,7 +334,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                       </td>
 
                       {/* Language */}
-                      <td className="py-3 px-3 font-semibold text-[11px]">
+                      <td className="py-2.5 px-3 font-bold text-[11px] whitespace-nowrap">
                         <span
                           className={
                             proj.language === 'MQL5'
@@ -340,15 +349,15 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                       </td>
 
                       {/* Project Name & Description */}
-                      <td className="py-3 px-4">
+                      <td className="py-2.5 px-4">
                         <div className="font-bold text-xs flex items-center gap-2">
                           <span className={isLight ? 'text-[#1d1d1f]' : 'text-white'}>{proj.name}</span>
                           {isActive && (
-                            <span className="text-[9.5px] px-1.5 py-0.2 rounded bg-[#30d158]/20 text-[#30d158] font-semibold uppercase">
+                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#30d158]/20 text-[#30d158] font-bold uppercase tracking-wider">
                               Active
                             </span>
                           )}
-                          <span className={`text-[10px] font-normal ${isLight ? 'text-[#86868b]' : 'text-[#86868b]'}`}>
+                          <span className={`text-[10.5px] font-normal ${isLight ? 'text-[#86868b]' : 'text-[#86868b]'}`}>
                             ({proj.symbol || 'XAUUSD'} · {proj.timeframe || 'M15'})
                           </span>
                         </div>
@@ -360,24 +369,24 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                       </td>
 
                       {/* Created */}
-                      <td className={`py-3 px-3 text-[11px] font-mono whitespace-nowrap ${isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}`}>
+                      <td className={`py-2.5 px-3 text-[11px] font-mono whitespace-nowrap ${isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'}`}>
                         {proj.createdAt}
                       </td>
 
                       {/* Modified */}
-                      <td className={`py-3 px-3 text-[11px] font-mono whitespace-nowrap ${isLight ? 'text-[#1d1d1f]' : 'text-white/80'}`}>
+                      <td className={`py-2.5 px-3 text-[11px] font-mono whitespace-nowrap font-semibold ${isLight ? 'text-[#1d1d1f]' : 'text-white/90'}`}>
                         {proj.modifiedAt}
                       </td>
 
                       {/* Management Actions */}
-                      <td className="py-3 px-4 text-right">
-                        <div className="flex items-center justify-end gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
+                      <td className="py-2.5 px-4 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
                           <button
                             onClick={() => handleExport(proj)}
                             className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
                               isLight
                                 ? 'border-black/10 hover:bg-black/5 text-[#6e6e73]'
-                                : 'border-white/10 hover:bg-white/10 text-[#86868b]'
+                                : 'border-white/12 hover:bg-white/10 text-[#86868b] hover:text-white'
                             }`}
                             title="Export to JSON"
                           >
@@ -388,7 +397,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                             className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
                               isLight
                                 ? 'border-black/10 hover:bg-black/5 text-[#6e6e73]'
-                                : 'border-white/10 hover:bg-white/10 text-[#86868b]'
+                                : 'border-white/12 hover:bg-white/10 text-[#86868b] hover:text-white'
                             }`}
                             title="Duplicate Project"
                           >
@@ -396,7 +405,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                           </button>
                           <button
                             onClick={() => handleDelete(proj.id, proj.name)}
-                            className="p-1.5 rounded-lg border border-[#ff453a]/20 hover:bg-[#ff453a]/15 text-[#ff453a] transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg border border-[#ff453a]/25 hover:bg-[#ff453a]/15 text-[#ff453a] transition-colors cursor-pointer"
                             title="Delete Project"
                           >
                             <LucideIcons.Trash2 size={12} />
@@ -412,7 +421,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
         </div>
 
         {/* Modal Footer Bar */}
-        <div className={`px-6 py-3 border-t flex items-center justify-between text-xs flex-shrink-0 ${isLight ? 'bg-[#f5f5f7] border-black/[0.08] text-[#6e6e73]' : 'bg-[#0d0d14] border-white/[0.08] text-[#86868b]'}`}>
+        <div className={`px-6 py-3 border-t flex items-center justify-between text-xs flex-shrink-0 ${isLight ? 'bg-[#f5f5f7] border-black/[0.08] text-[#6e6e73]' : 'bg-[#101018] border-white/[0.08] text-[#86868b]'}`}>
           <div className="flex items-center gap-2">
             <LucideIcons.Info size={13} className="text-[#007aff]" />
             <span>Loading a project replaces all nodes, weights, and rules on the canvas.</span>

@@ -379,10 +379,17 @@ export const TopNav: React.FC<TopNavProps> = ({
 
           <div className={`h-3.5 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/10' : 'bg-white/10'}`} />
 
-          {/* MT5 Connected */}
-          <div className="flex items-center gap-1.5 text-[11px] flex-shrink-0">
-            <span className={`w-1.5 h-1.5 rounded-full ${isLight ? 'bg-[#28cd41]' : 'bg-[#30d158] shadow-[0_0_6px_#30d158]'}`} />
-            <span className={`font-medium ${isLight ? 'text-[#1d1d1f]' : 'text-[#d1d1d6]'}`}>MT5 Connected</span>
+          {/* MT5 & macOS Host Connected Status */}
+          <div className="flex items-center gap-2 text-[11px] flex-shrink-0 select-none">
+            <div className="flex items-center gap-1.5">
+              <span className={`w-1.5 h-1.5 rounded-full ${isLight ? 'bg-[#28cd41]' : 'bg-[#30d158] shadow-[0_0_6px_#30d158]'}`} />
+              <span className={`font-semibold ${isLight ? 'text-[#1d1d1f]' : 'text-[#f5f5f7]'}`}>MT5 Connected</span>
+            </div>
+            <span className={isLight ? 'text-black/20' : 'text-white/20'}>·</span>
+            <div className="hidden xl:flex items-center gap-1 font-mono text-[10.5px] opacity-75 hover:opacity-100 transition-opacity">
+              <span className={isLight ? 'text-[#6e6e73]' : 'text-[#a1a1a6]'}>alessandros-macbook-pro-2</span>
+              <span className="text-[11px]">🖥️</span>
+            </div>
           </div>
 
           <div className={`h-3.5 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/10' : 'bg-white/10'}`} />

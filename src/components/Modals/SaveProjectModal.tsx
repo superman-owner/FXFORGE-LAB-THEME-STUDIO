@@ -55,18 +55,18 @@ export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xl animate-in fade-in duration-200">
       <div
-        className={`w-full max-w-lg rounded-3xl border shadow-2xl overflow-hidden transition-all duration-200 ${
+        className={`w-full max-w-lg rounded-2xl border shadow-2xl overflow-hidden transition-all duration-200 ${
           isLight
-            ? 'bg-white/95 border-black/10 text-[#1d1d1f] shadow-[0_20px_60px_rgba(0,0,0,0.15)]'
-            : 'bg-[#101018]/95 border-white/10 text-white shadow-[0_25px_70px_rgba(0,0,0,0.8)] backdrop-blur-2xl'
+            ? 'bg-[#ffffff]/95 border-black/10 text-[#1d1d1f] shadow-[0_25px_70px_rgba(0,0,0,0.18)]'
+            : 'bg-[#16161e]/95 border-white/12 text-white shadow-[0_30px_90px_rgba(0,0,0,0.85)] backdrop-blur-3xl'
         }`}
       >
-        {/* Header */}
-        <div className={`px-6 py-4 border-b flex items-center justify-between ${isLight ? 'border-black/[0.08]' : 'border-white/[0.08]'}`}>
+        {/*  Header */}
+        <div className={`px-6 py-4 border-b flex items-center justify-between ${isLight ? 'border-black/[0.08] bg-black/[0.02]' : 'border-white/[0.08] bg-white/[0.02]'}`}>
           <div className="flex items-center gap-3">
-            <div className={`w-9 h-9 rounded-2xl flex items-center justify-center ${isLight ? 'bg-[#30d158]/10 text-[#30d158]' : 'bg-[#30d158]/15 text-[#30d158]'}`}>
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isLight ? 'bg-[#30d158]/10 text-[#30d158]' : 'bg-[#30d158]/15 text-[#30d158]'}`}>
               <LucideIcons.Save size={20} strokeWidth={2.2} />
             </div>
             <div>
@@ -78,11 +78,11 @@ export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
+            className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
               isLight ? 'hover:bg-black/5 text-[#6e6e73] hover:text-[#1d1d1f]' : 'hover:bg-white/10 text-[#86868b] hover:text-white'
             }`}
           >
-            <LucideIcons.X size={18} />
+            <LucideIcons.X size={16} />
           </button>
         </div>
 
@@ -101,8 +101,8 @@ export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
               placeholder="e.g. XAUUSD HyperScalper PPO"
               className={`w-full px-3.5 py-2 text-xs rounded-xl border transition-all focus:outline-none ${
                 isLight
-                  ? 'bg-white border-black/10 text-[#1d1d1f] focus:border-[#0071e3] focus:ring-2 focus:ring-[#0071e3]/20'
-                  : 'bg-white/5 border-white/10 text-white focus:border-[#007aff] focus:ring-2 focus:ring-[#007aff]/20'
+                  ? 'bg-white border-black/12 text-[#1d1d1f] focus:border-[#0071e3] focus:ring-2 focus:ring-[#0071e3]/20'
+                  : 'bg-white/[0.07] border-white/14 text-white placeholder:text-white/40 focus:border-[#007aff] focus:bg-white/[0.10] focus:ring-2 focus:ring-[#007aff]/25'
               }`}
             />
           </div>
@@ -118,8 +118,8 @@ export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
                 onChange={(e) => setProjectType(e.target.value as any)}
                 className={`w-full px-3 py-2 text-xs rounded-xl border transition-all focus:outline-none ${
                   isLight
-                    ? 'bg-white border-black/10 text-[#1d1d1f] focus:border-[#0071e3]'
-                    : 'bg-[#1a1a24] border-white/10 text-white focus:border-[#007aff]'
+                    ? 'bg-white border-black/12 text-[#1d1d1f] focus:border-[#0071e3]'
+                    : 'bg-[#1e1e28] border-white/14 text-white focus:border-[#007aff]'
                 }`}
               >
                 <option value="Deep RL Policy">Deep RL Policy</option>
@@ -140,8 +140,8 @@ export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
                 onChange={(e) => setLanguage(e.target.value as any)}
                 className={`w-full px-3 py-2 text-xs rounded-xl border transition-all focus:outline-none ${
                   isLight
-                    ? 'bg-white border-black/10 text-[#1d1d1f] focus:border-[#0071e3]'
-                    : 'bg-[#1a1a24] border-white/10 text-white focus:border-[#007aff]'
+                    ? 'bg-white border-black/12 text-[#1d1d1f] focus:border-[#0071e3]'
+                    : 'bg-[#1e1e28] border-white/14 text-white focus:border-[#007aff]'
                 }`}
               >
                 <option value="MQL5">MQL5 (MetaTrader 5)</option>
@@ -165,8 +165,8 @@ export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
                 placeholder="XAUUSD"
                 className={`w-full px-3.5 py-2 text-xs rounded-xl border transition-all focus:outline-none ${
                   isLight
-                    ? 'bg-white border-black/10 text-[#1d1d1f] focus:border-[#0071e3]'
-                    : 'bg-white/5 border-white/10 text-white focus:border-[#007aff]'
+                    ? 'bg-white border-black/12 text-[#1d1d1f] focus:border-[#0071e3]'
+                    : 'bg-white/[0.07] border-white/14 text-white placeholder:text-white/40 focus:border-[#007aff]'
                 }`}
               />
             </div>
@@ -182,8 +182,8 @@ export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
                 placeholder="M15"
                 className={`w-full px-3.5 py-2 text-xs rounded-xl border transition-all focus:outline-none ${
                   isLight
-                    ? 'bg-white border-black/10 text-[#1d1d1f] focus:border-[#0071e3]'
-                    : 'bg-white/5 border-white/10 text-white focus:border-[#007aff]'
+                    ? 'bg-white border-black/12 text-[#1d1d1f] focus:border-[#0071e3]'
+                    : 'bg-white/[0.07] border-white/14 text-white placeholder:text-white/40 focus:border-[#007aff]'
                 }`}
               />
             </div>
@@ -201,14 +201,14 @@ export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
               placeholder="Add key notes on risk parameters, reward weights, or triggers..."
               className={`w-full px-3.5 py-2 text-xs rounded-xl border transition-all focus:outline-none resize-none ${
                 isLight
-                  ? 'bg-white border-black/10 text-[#1d1d1f] focus:border-[#0071e3]'
-                  : 'bg-white/5 border-white/10 text-white focus:border-[#007aff]'
+                  ? 'bg-white border-black/12 text-[#1d1d1f] focus:border-[#0071e3]'
+                  : 'bg-white/[0.07] border-white/14 text-white placeholder:text-white/40 focus:border-[#007aff]'
               }`}
             />
           </div>
 
           {/* Current Canvas Stats Pill */}
-          <div className={`p-3 rounded-2xl flex items-center justify-between text-xs ${isLight ? 'bg-[#f5f5f7] text-[#6e6e73]' : 'bg-white/5 text-[#86868b]'}`}>
+          <div className={`p-3 rounded-xl flex items-center justify-between text-xs border ${isLight ? 'bg-[#f5f5f7] border-black/[0.06] text-[#6e6e73]' : 'bg-white/[0.04] border-white/[0.08] text-[#86868b]'}`}>
             <span className="flex items-center gap-1.5">
               <LucideIcons.Network size={13} className="text-[#007aff]" />
               <span>Canvas Elements:</span>
@@ -223,17 +223,17 @@ export const SaveProjectModal: React.FC<SaveProjectModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold border cursor-pointer transition-colors ${
-                isLight ? 'border-black/10 hover:bg-black/5 text-[#1d1d1f]' : 'border-white/10 hover:bg-white/10 text-white'
+              className={`px-4 py-2 rounded-lg text-xs font-semibold border cursor-pointer transition-colors ${
+                isLight ? 'border-black/10 hover:bg-black/5 text-[#1d1d1f]' : 'border-white/12 hover:bg-white/10 text-white'
               }`}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl text-xs font-bold bg-[#30d158] hover:bg-[#28cd41] text-white shadow-[0_2px_10px_rgba(48,209,88,0.4)] cursor-pointer transition-all active:scale-95 flex items-center gap-1.5"
+              className="px-5 py-2 rounded-lg text-xs font-bold bg-[#30d158] hover:bg-[#28cd41] text-black shadow-[0_2px_8px_rgba(48,209,88,0.35)] cursor-pointer transition-all active:scale-95 flex items-center gap-1.5"
             >
-              <LucideIcons.Check size={14} />
+              <LucideIcons.Check size={14} strokeWidth={2.5} />
               <span>Save Strategy</span>
             </button>
           </div>
