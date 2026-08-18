@@ -323,12 +323,12 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                     >
                       {/* Project Name & Description with 🟢 Green Dot */}
                       <td className="py-3 px-5">
-                        <div className="flex items-center gap-2.5 flex-wrap">
+                        <div className="flex items-center gap-2">
                           {/* 🟢 Green Dot Active Indicator */}
                           {isActive ? (
                             <span
                               className="w-2.5 h-2.5 rounded-full bg-[#30d158] shadow-[0_0_8px_#30d158] flex-shrink-0 animate-pulse"
-                              title="Currently Open Project"
+                              title="Currently Open Strategy"
                             />
                           ) : (
                             <span className="w-2 h-2 rounded-full bg-white/25 flex-shrink-0" />
@@ -348,43 +348,18 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                             {proj.name}
                           </span>
 
-                          {/* Type Tag */}
                           <span
-                            className={`text-[10.5px] px-2 py-0.5 rounded-md font-medium whitespace-nowrap border ${
-                              proj.type === 'Deep RL Policy'
-                                ? 'bg-[#bf5af2]/15 text-[#bf5af2] border-[#bf5af2]/25'
-                                : proj.type === 'Grid Intelligence'
-                                ? 'bg-[#30d158]/15 text-[#30d158] border-[#30d158]/25'
-                                : proj.type === 'BPNN Scalper'
-                                ? 'bg-[#ff9f0a]/15 text-[#ff9f0a] border-[#ff9f0a]/25'
-                                : proj.type === 'Multi-TF Matrix'
-                                ? 'bg-[#0a84ff]/15 text-[#0a84ff] border-[#0a84ff]/25'
-                                : proj.type === 'Risk Manager'
-                                ? 'bg-[#ff453a]/15 text-[#ff453a] border-[#ff453a]/25'
-                                : 'bg-white/10 text-white/80 border-white/15'
-                            }`}
-                          >
-                            {proj.type}
-                          </span>
-
-                          <span
-                            className={`text-[11px] font-mono whitespace-nowrap ${
+                            className={`text-[11.5px] font-mono whitespace-nowrap ${
                               isLight ? 'text-[#86868b]' : 'text-[#86868b]'
                             }`}
                           >
                             ({proj.symbol || 'XAUUSD'} · {proj.timeframe || 'M15'})
                           </span>
-
-                          {isActive && (
-                            <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#30d158]/20 text-[#30d158] font-bold uppercase tracking-wider whitespace-nowrap">
-                              OPEN
-                            </span>
-                          )}
                         </div>
 
                         {proj.description && (
                           <p
-                            className={`text-[11.5px] truncate max-w-2xl mt-1 pl-5 ${
+                            className={`text-[11.5px] truncate max-w-2xl mt-1 pl-4.5 ${
                               isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'
                             }`}
                           >
@@ -417,15 +392,10 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                           className="flex items-center justify-end gap-2"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          {isActive ? (
-                            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-md text-[11px] font-bold text-[#30d158] bg-[#30d158]/15 border border-[#30d158]/30">
-                              <span className="w-1.5 h-1.5 rounded-full bg-[#30d158] shadow-[0_0_6px_#30d158]" />
-                              Open
-                            </span>
-                          ) : (
+                          {!isActive && (
                             <button
                               onClick={() => handleLoad(proj)}
-                              className="px-3.5 py-1 rounded-md text-[11px] font-bold text-black bg-[#30d158] hover:bg-[#28cd41] shadow-[0_1px_4px_rgba(48,209,88,0.4)] cursor-pointer transition-all active:scale-95"
+                              className="px-3.5 py-1 rounded-md text-[11px] font-bold text-black bg-[#30d158] hover:bg-[#28cd41] shadow-[0_1px_4px_rgba(48,209,88,0.4)] cursor-pointer transition-all active:scale-95 mr-1"
                             >
                               Load
                             </button>
