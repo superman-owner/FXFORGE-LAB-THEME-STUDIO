@@ -49,8 +49,20 @@ function AppContent() {
   const [isMT5DeployOpen, setIsMT5DeployOpen] = useState(false);
   const [isProjectManagerOpen, setIsProjectManagerOpen] = useState(false);
   const [isSaveProjectOpen, setIsSaveProjectOpen] = useState(false);
+  const [currentProjectName, setCurrentProjectName] = useState<string>('Untitled Project');
   const [cameraResetTrigger, setCameraResetTrigger] = useState(0);
   const fileImportInputRef = useRef<HTMLInputElement>(null);
+
+  // Listen for blueprint loads to sync active project name
+  useEffect(() => {
+    const handleBlueprintLoad = (e: any) => {
+      if (e.detail?.name) {
+        setCurrentProjectName(e.detail.name);
+      }
+    };
+    window.addEventListener('fxforge-load-blueprint', handleBlueprintLoad);
+    return () => window.removeEventListener('fxforge-load-blueprint', handleBlueprintLoad);
+  }, []);
 
   // Ensure stale processes are killed on fresh page boot
   useEffect(() => {
@@ -200,13 +212,14 @@ function AppContent() {
   }, []);
 
   const handleNewProject = useCallback(() => {
+    setCurrentProjectName('Untitled Project');
     // Reset to default blank canvas template
     window.dispatchEvent(
       new CustomEvent('fxforge-load-blueprint', {
         detail: {
           nodes: [],
           edges: [],
-          name: 'New Blank Strategy',
+          name: 'Untitled Project',
         },
       })
     );
@@ -216,7 +229,7 @@ function AppContent() {
   const handleExportProjectDirect = useCallback(() => {
     const active = getSavedProjects().find((p) => p.id === getActiveProjectId()) || {
       id: `mt5-${Math.floor(1000 + Math.random() * 9000)}`,
-      name: 'FXFORGE_Custom_Pipeline',
+      name: currentProjectName !== 'Untitled Project' ? currentProjectName : 'FXFORGE_Custom_Pipeline',
       type: 'Deep RL Policy' as const,
       language: 'MQL5' as const,
       symbol: architectureSpec?.symbol || 'XAUUSD',
@@ -229,7 +242,7 @@ function AppContent() {
     };
     exportProjectToFile(active);
     setLogs((prev) => [...prev, `[STUDIO] Exported project "${active.name}" to JSON file.`]);
-  }, [architectureSpec]);
+  }, [architectureSpec, currentProjectName]);
 
   const handleFileImportDirect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -237,6 +250,7 @@ function AppContent() {
     try {
       const imported = await importProjectFromFile(file);
       if (imported.nodes && imported.nodes.length > 0) {
+        setCurrentProjectName(imported.name);
         window.dispatchEvent(
           new CustomEvent('fxforge-load-blueprint', {
             detail: {
@@ -286,6 +300,7 @@ function AppContent() {
         onNewProject={handleNewProject}
         onExportProject={handleExportProjectDirect}
         onImportProject={() => fileImportInputRef.current?.click()}
+        projectName={currentProjectName}
       />
 
       {/*  Main Quantum Visualizer & Flow DAG Stage with Shared Left Sidebar */}
@@ -336,8 +351,9 @@ function AppContent() {
       <SaveProjectModal
         isOpen={isSaveProjectOpen}
         onClose={() => setIsSaveProjectOpen(false)}
-        onSaved={(project: SavedProject) => {
-          setLogs((prev) => [...prev, `[STUDIO] Saved project "${project.name}" (${project.id}) successfully.`]);
+        onSaved={(saved: SavedProject) => {
+          setCurrentProjectName(saved.name);
+          setLogs((prev) => [...prev, `[STUDIO] Saved project "${saved.name}" (${saved.id}) successfully.`]);
         }}
       />
 

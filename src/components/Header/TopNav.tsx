@@ -19,6 +19,7 @@ interface TopNavProps {
   onNewProject?: () => void;
   onExportProject?: () => void;
   onImportProject?: () => void;
+  projectName?: string;
 }
 
 export const TopNav: React.FC<TopNavProps> = ({
@@ -36,6 +37,7 @@ export const TopNav: React.FC<TopNavProps> = ({
   onNewProject,
   onExportProject,
   onImportProject,
+  projectName = 'Untitled Project',
 }) => {
   const { theme, toggleTheme } = useTheme();
   const isLight = theme === 'light';
@@ -62,7 +64,7 @@ export const TopNav: React.FC<TopNavProps> = ({
           : 'vision-glass apple-specular border-white/[0.08] text-slate-200'
       }`}
     >
-      {/* Left: macOS Traffic Lights + Brand + Projects Dropdown + Divider */}
+      {/* Left: macOS Traffic Lights + Brand + Projects Dropdown + Divider + Active Project Name + Divider */}
       <div className="flex items-center gap-3 flex-shrink-0 min-w-max">
         <div className="flex items-center gap-1.5 pr-1">
           <div className="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]/50 cursor-pointer hover:opacity-80 transition-opacity" />
@@ -211,6 +213,31 @@ export const TopNav: React.FC<TopNavProps> = ({
             </div>
           )}
         </div>
+
+        {/* 1.  Vertical Divider after Projects Menu */}
+        <div className={`h-4 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/15' : 'bg-white/15'}`} />
+
+        {/* 2.  Active Project Name Display */}
+        <div
+          style={{
+            fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif',
+          }}
+          className={`flex items-center gap-1.5 px-2 py-0.5 rounded-[5px] text-[12.5px] font-medium transition-colors select-none ${
+            isLight ? 'text-[#1d1d1f]' : 'text-white/90'
+          }`}
+          title={`Active Project: ${projectName || 'Untitled Project'}`}
+        >
+          <LucideIcons.FileCode
+            size={13}
+            className={isLight ? 'text-[#0071e3]' : 'text-[#007aff]'}
+          />
+          <span className="font-semibold tracking-tight max-w-[240px] truncate">
+            {projectName || 'Untitled Project'}
+          </span>
+        </div>
+
+        {/* 3.  Vertical Divider before Flow DAG */}
+        <div className={`h-4 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/15' : 'bg-white/15'}`} />
       </div>
 
       {/* Main Suite (Shifted to the Right: 'Connected' & Theme Toggle end exactly 20px from right edge) */}
