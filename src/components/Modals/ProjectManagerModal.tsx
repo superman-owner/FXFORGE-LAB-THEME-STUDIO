@@ -136,13 +136,13 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-xl animate-in fade-in duration-200"
     >
       <div
-        className={`w-full max-w-6xl max-h-[88vh] rounded-2xl border shadow-2xl flex flex-col overflow-hidden transition-all duration-200 ${
+        className={`w-full max-w-5xl max-h-[88vh] rounded-2xl border shadow-2xl flex flex-col overflow-hidden transition-all duration-200 ${
           isLight
             ? 'bg-[#ffffff]/98 border-black/10 text-[#1d1d1f] shadow-[0_25px_70px_rgba(0,0,0,0.18)]'
             : 'bg-[#14141c]/98 border-white/12 text-white shadow-[0_30px_90px_rgba(0,0,0,0.85)] backdrop-blur-3xl'
         }`}
       >
-        {/*  Unified Header Bar */}
+        {/*  Header Bar */}
         <div
           className={`px-6 py-4 border-b flex items-center justify-between flex-shrink-0 ${
             isLight ? 'border-black/[0.08] bg-black/[0.02]' : 'border-white/[0.08] bg-white/[0.02]'
@@ -219,7 +219,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
           </div>
         </div>
 
-        {/* Unified Search Bar & Toolbar */}
+        {/* Search Bar & Toolbar */}
         <div
           className={`px-6 py-2.5 border-b flex items-center justify-between gap-4 flex-shrink-0 ${
             isLight ? 'bg-[#f5f5f7] border-black/[0.06]' : 'bg-[#0e0e16] border-white/[0.06]'
@@ -236,7 +236,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by ID, name, asset, language (e.g. GRID, MQL5, XAUUSD)..."
+              placeholder="Search by name, asset, language (e.g. GRID, MQL5, XAUUSD)..."
               className={`w-full pl-9 pr-4 py-1.5 text-[12px] rounded-xl border transition-all focus:outline-none ${
                 isLight
                   ? 'bg-white border-black/12 text-[#1d1d1f] placeholder:text-[#8e8e93] focus:border-[#0071e3] focus:ring-2 focus:ring-[#0071e3]/20'
@@ -278,7 +278,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
           </div>
         )}
 
-        {/*  Unified Projects Table */}
+        {/*  Streamlined Projects Table (Front columns removed, starting directly with Project Name) */}
         <div className="flex-1 overflow-y-auto min-h-0">
           <table className="w-full text-left text-[12px] border-collapse">
             <thead
@@ -287,20 +287,16 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
               }`}
             >
               <tr className="border-b border-black/[0.08] dark:border-white/[0.08]">
-                <th className="py-2.5 px-4 font-semibold w-[85px] text-center whitespace-nowrap">Action</th>
-                <th className="py-2.5 px-3 font-semibold w-[95px] whitespace-nowrap">ID</th>
-                <th className="py-2.5 px-3 font-semibold w-[145px] whitespace-nowrap">Type</th>
-                <th className="py-2.5 px-3 font-semibold w-[100px] whitespace-nowrap">Language</th>
-                <th className="py-2.5 px-4 font-semibold whitespace-nowrap">Project Name & Description</th>
-                <th className="py-2.5 px-3 font-semibold w-[145px] whitespace-nowrap">Created</th>
-                <th className="py-2.5 px-3 font-semibold w-[145px] whitespace-nowrap">Modified</th>
-                <th className="py-2.5 px-4 font-semibold w-[110px] text-right whitespace-nowrap">Manage</th>
+                <th className="py-3 px-5 font-semibold whitespace-nowrap">Project Name & Description</th>
+                <th className="py-3 px-4 font-semibold w-[160px] whitespace-nowrap">Created</th>
+                <th className="py-3 px-4 font-semibold w-[160px] whitespace-nowrap">Modified</th>
+                <th className="py-3 px-5 font-semibold w-[170px] text-right whitespace-nowrap">Action & Manage</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-black/[0.04] dark:divide-white/[0.04]">
               {filteredProjects.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-14 text-center text-[#86868b]">
+                  <td colSpan={4} className="py-14 text-center text-[#86868b]">
                     <LucideIcons.FolderSearch size={36} className="mx-auto mb-2 opacity-30" />
                     <p className="font-semibold text-[13px]">No projects found</p>
                     <p className="text-[12px] mt-1 opacity-75">
@@ -314,7 +310,8 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                   return (
                     <tr
                       key={proj.id}
-                      className={`transition-colors group ${
+                      onClick={() => !isActive && handleLoad(proj)}
+                      className={`transition-colors group cursor-pointer ${
                         isActive
                           ? isLight
                             ? 'bg-[#30d158]/10 border-l-4 border-l-[#30d158]'
@@ -324,79 +321,21 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                           : 'hover:bg-white/[0.03] border-l-4 border-l-transparent'
                       }`}
                     >
-                      {/* Action Button */}
-                      <td className="py-2.5 px-4 text-center">
-                        {isActive ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-bold text-[#30d158] bg-[#30d158]/15 border border-[#30d158]/30">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#30d158] shadow-[0_0_6px_#30d158]" />
-                            Open
-                          </span>
-                        ) : (
-                          <button
-                            onClick={() => handleLoad(proj)}
-                            className="px-3.5 py-1 rounded-md text-[11px] font-bold text-black bg-[#30d158] hover:bg-[#28cd41] shadow-[0_1px_4px_rgba(48,209,88,0.4)] cursor-pointer transition-all active:scale-95"
-                          >
-                            Load
-                          </button>
-                        )}
-                      </td>
-
-                      {/* ID */}
-                      <td className="py-2.5 px-3 font-semibold text-[11.5px] whitespace-nowrap">
-                        <span className={isLight ? 'text-[#0071e3]' : 'text-[#64d2ff]'}>{proj.id}</span>
-                      </td>
-
-                      {/* Type Badge (No Wrapping, unified font) */}
-                      <td className="py-2.5 px-3 whitespace-nowrap">
-                        <span
-                          className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold whitespace-nowrap border ${
-                            proj.type === 'Deep RL Policy'
-                              ? 'bg-[#bf5af2]/15 text-[#bf5af2] border-[#bf5af2]/25'
-                              : proj.type === 'Grid Intelligence'
-                              ? 'bg-[#30d158]/15 text-[#30d158] border-[#30d158]/25'
-                              : proj.type === 'BPNN Scalper'
-                              ? 'bg-[#ff9f0a]/15 text-[#ff9f0a] border-[#ff9f0a]/25'
-                              : proj.type === 'Multi-TF Matrix'
-                              ? 'bg-[#0a84ff]/15 text-[#0a84ff] border-[#0a84ff]/25'
-                              : proj.type === 'Risk Manager'
-                              ? 'bg-[#ff453a]/15 text-[#ff453a] border-[#ff453a]/25'
-                              : 'bg-white/10 text-white/90 border-white/15'
-                          }`}
-                        >
-                          {proj.type}
-                        </span>
-                      </td>
-
-                      {/* Language */}
-                      <td className="py-2.5 px-3 font-bold text-[11px] whitespace-nowrap">
-                        <span
-                          className={
-                            proj.language === 'MQL5'
-                              ? 'text-[#00c7be]'
-                              : proj.language === 'MQL4'
-                              ? 'text-[#ffd60a]'
-                              : 'text-[#af52de]'
-                          }
-                        >
-                          {proj.language}
-                        </span>
-                      </td>
-
-                      {/* Project Name with Green Dot for Active File */}
-                      <td className="py-2.5 px-4">
-                        <div className="flex items-center gap-2">
-                          {/* 🟢 Green Dot Status Indicator for Active File */}
+                      {/* Project Name & Description with 🟢 Green Dot */}
+                      <td className="py-3 px-5">
+                        <div className="flex items-center gap-2.5 flex-wrap">
+                          {/* 🟢 Green Dot Active Indicator */}
                           {isActive ? (
                             <span
                               className="w-2.5 h-2.5 rounded-full bg-[#30d158] shadow-[0_0_8px_#30d158] flex-shrink-0 animate-pulse"
                               title="Currently Open Project"
                             />
                           ) : (
-                            <span className="w-2 h-2 rounded-full bg-white/20 flex-shrink-0" />
+                            <span className="w-2 h-2 rounded-full bg-white/25 flex-shrink-0" />
                           )}
 
                           <span
-                            className={`font-bold text-[12.5px] tracking-tight ${
+                            className={`font-bold text-[13px] tracking-tight ${
                               isActive
                                 ? isLight
                                   ? 'text-[#1d1d1f]'
@@ -409,19 +348,56 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                             {proj.name}
                           </span>
 
-                          <span className={`text-[11px] font-normal ${isLight ? 'text-[#86868b]' : 'text-[#86868b]'}`}>
+                          {/* Language Badge */}
+                          <span
+                            className={`text-[10.5px] px-1.5 py-0.5 rounded font-bold uppercase whitespace-nowrap ${
+                              proj.language === 'MQL5'
+                                ? 'bg-[#00c7be]/15 text-[#00c7be] border border-[#00c7be]/25'
+                                : proj.language === 'MQL4'
+                                ? 'bg-[#ffd60a]/15 text-[#ffd60a] border border-[#ffd60a]/25'
+                                : 'bg-[#af52de]/15 text-[#af52de] border border-[#af52de]/25'
+                            }`}
+                          >
+                            {proj.language}
+                          </span>
+
+                          {/* Type Tag */}
+                          <span
+                            className={`text-[10.5px] px-2 py-0.5 rounded-md font-medium whitespace-nowrap border ${
+                              proj.type === 'Deep RL Policy'
+                                ? 'bg-[#bf5af2]/15 text-[#bf5af2] border-[#bf5af2]/25'
+                                : proj.type === 'Grid Intelligence'
+                                ? 'bg-[#30d158]/15 text-[#30d158] border-[#30d158]/25'
+                                : proj.type === 'BPNN Scalper'
+                                ? 'bg-[#ff9f0a]/15 text-[#ff9f0a] border-[#ff9f0a]/25'
+                                : proj.type === 'Multi-TF Matrix'
+                                ? 'bg-[#0a84ff]/15 text-[#0a84ff] border-[#0a84ff]/25'
+                                : proj.type === 'Risk Manager'
+                                ? 'bg-[#ff453a]/15 text-[#ff453a] border-[#ff453a]/25'
+                                : 'bg-white/10 text-white/80 border-white/15'
+                            }`}
+                          >
+                            {proj.type}
+                          </span>
+
+                          <span
+                            className={`text-[11px] font-mono whitespace-nowrap ${
+                              isLight ? 'text-[#86868b]' : 'text-[#86868b]'
+                            }`}
+                          >
                             ({proj.symbol || 'XAUUSD'} · {proj.timeframe || 'M15'})
                           </span>
 
                           {isActive && (
-                            <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#30d158]/20 text-[#30d158] font-bold uppercase tracking-wider">
+                            <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#30d158]/20 text-[#30d158] font-bold uppercase tracking-wider whitespace-nowrap">
                               OPEN
                             </span>
                           )}
                         </div>
+
                         {proj.description && (
                           <p
-                            className={`text-[11px] truncate max-w-lg mt-0.5 pl-4.5 ${
+                            className={`text-[11.5px] truncate max-w-2xl mt-1 pl-5 ${
                               isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'
                             }`}
                           >
@@ -432,7 +408,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
 
                       {/* Created */}
                       <td
-                        className={`py-2.5 px-3 text-[11px] whitespace-nowrap ${
+                        className={`py-3 px-4 text-[11.5px] whitespace-nowrap ${
                           isLight ? 'text-[#6e6e73]' : 'text-[#86868b]'
                         }`}
                       >
@@ -441,16 +417,33 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
 
                       {/* Modified */}
                       <td
-                        className={`py-2.5 px-3 text-[11px] whitespace-nowrap font-medium ${
+                        className={`py-3 px-4 text-[11.5px] whitespace-nowrap font-medium ${
                           isLight ? 'text-[#1d1d1f]' : 'text-white/90'
                         }`}
                       >
                         {proj.modifiedAt}
                       </td>
 
-                      {/* Management Actions */}
-                      <td className="py-2.5 px-4 text-right whitespace-nowrap">
-                        <div className="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+                      {/* Action & Manage */}
+                      <td className="py-3 px-5 text-right whitespace-nowrap">
+                        <div
+                          className="flex items-center justify-end gap-2"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {isActive ? (
+                            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-md text-[11px] font-bold text-[#30d158] bg-[#30d158]/15 border border-[#30d158]/30">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#30d158] shadow-[0_0_6px_#30d158]" />
+                              Open
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => handleLoad(proj)}
+                              className="px-3.5 py-1 rounded-md text-[11px] font-bold text-black bg-[#30d158] hover:bg-[#28cd41] shadow-[0_1px_4px_rgba(48,209,88,0.4)] cursor-pointer transition-all active:scale-95"
+                            >
+                              Load
+                            </button>
+                          )}
+
                           <button
                             onClick={() => handleExport(proj)}
                             className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
@@ -462,6 +455,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                           >
                             <LucideIcons.Download size={12} />
                           </button>
+
                           <button
                             onClick={() => handleDuplicate(proj.id)}
                             className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
@@ -473,6 +467,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
                           >
                             <LucideIcons.Copy size={12} />
                           </button>
+
                           <button
                             onClick={() => handleDelete(proj.id, proj.name)}
                             className="p-1.5 rounded-lg border border-[#ff453a]/25 hover:bg-[#ff453a]/15 text-[#ff453a] transition-colors cursor-pointer"
@@ -490,7 +485,7 @@ export const ProjectManagerModal: React.FC<ProjectManagerModalProps> = ({
           </table>
         </div>
 
-        {/* Unified Footer Bar */}
+        {/* Footer Bar */}
         <div
           className={`px-6 py-3 border-t flex items-center justify-between text-[12px] flex-shrink-0 ${
             isLight
