@@ -56,7 +56,7 @@ export const TopNav: React.FC<TopNavProps> = ({
   return (
     <header
       style={{ paddingLeft: '16px', paddingRight: '20px' }}
-      className={`h-12 w-full border-b flex items-center justify-between z-30 select-none overflow-x-auto overflow-y-hidden transition-colors duration-200 ${
+      className={`h-12 w-full border-b flex items-center justify-between z-40 select-none overflow-visible relative transition-colors duration-200 ${
         isLight
           ? 'bg-white/85 border-black/[0.08] text-[#1d1d1f] shadow-sm backdrop-blur-xl'
           : 'vision-glass apple-specular border-white/[0.08] text-slate-200'
@@ -79,7 +79,7 @@ export const TopNav: React.FC<TopNavProps> = ({
         {/*  Vertical Divider */}
         <div className={`h-4 w-[1px] flex-shrink-0 ${isLight ? 'bg-black/15' : 'bg-white/15'}`} />
 
-        {/* FxDreema-Style Projects Dropdown Menu (No Capsule, Clean Menu Bar Style) */}
+        {/* FxDreema-Style Projects Dropdown Menu (Clean Menu Bar Style, Full 5 Items Visible) */}
         <div className="relative" ref={projectsMenuRef}>
           <button
             onClick={() => setIsProjectsOpen(!isProjectsOpen)}
@@ -100,80 +100,84 @@ export const TopNav: React.FC<TopNavProps> = ({
 
           {isProjectsOpen && (
             <div
-              className={`absolute left-0 top-full mt-1.5 w-56 rounded-2xl border shadow-xl py-1.5 z-50 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-150 ${
+              className={`absolute left-0 top-full mt-1.5 w-60 rounded-2xl border shadow-2xl py-1.5 z-50 backdrop-blur-3xl animate-in fade-in zoom-in-95 duration-150 ${
                 isLight
-                  ? 'bg-white/95 border-black/10 text-[#1d1d1f] shadow-[0_10px_30px_rgba(0,0,0,0.12)]'
-                  : 'bg-[#14141e]/95 border-white/10 text-white shadow-[0_15px_40px_rgba(0,0,0,0.7)]'
+                  ? 'bg-white/98 border-black/10 text-[#1d1d1f] shadow-[0_15px_40px_rgba(0,0,0,0.18)]'
+                  : 'bg-[#161622]/98 border-white/12 text-white shadow-[0_20px_50px_rgba(0,0,0,0.85)]'
               }`}
             >
-              {/* 1. New Project at the very TOP */}
+              {/* 1. ➕ New Project (Top) */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onNewProject?.();
                 }}
-                className={`w-full px-3 py-1.5 text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer text-left ${
+                className={`w-full px-3.5 py-2 text-xs font-medium flex items-center gap-2.5 transition-colors cursor-pointer text-left ${
                   isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
                 }`}
               >
-                <LucideIcons.FilePlus size={13} className="text-[#30d158]" />
+                <LucideIcons.FilePlus size={14} className="text-[#30d158] flex-shrink-0" />
                 <span className="flex-1 font-semibold">New Project</span>
                 <span className="text-[10px] opacity-40 font-mono">⌘N</span>
               </button>
 
+              {/* 2. 📂 Load Project... */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onOpenProjectManager?.();
                 }}
-                className={`w-full px-3 py-1.5 text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer text-left ${
+                className={`w-full px-3.5 py-2 text-xs font-medium flex items-center gap-2.5 transition-colors cursor-pointer text-left ${
                   isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
                 }`}
               >
-                <LucideIcons.FolderOpen size={13} className="text-[#007aff]" />
+                <LucideIcons.FolderOpen size={14} className="text-[#007aff] flex-shrink-0" />
                 <span className="flex-1 font-semibold">Load Project...</span>
                 <span className="text-[10px] opacity-40 font-mono">⌘O</span>
               </button>
 
+              {/* 3. 💾 Save Project... */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onOpenSaveProject?.();
                 }}
-                className={`w-full px-3 py-1.5 text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer text-left ${
+                className={`w-full px-3.5 py-2 text-xs font-medium flex items-center gap-2.5 transition-colors cursor-pointer text-left ${
                   isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
                 }`}
               >
-                <LucideIcons.Save size={13} className="text-[#00c7be]" />
+                <LucideIcons.Save size={14} className="text-[#00c7be] flex-shrink-0" />
                 <span className="flex-1">Save Project...</span>
                 <span className="text-[10px] opacity-40 font-mono">⌘S</span>
               </button>
 
-              <div className={`my-1 h-[1px] ${isLight ? 'bg-black/5' : 'bg-white/10'}`} />
+              <div className={`my-1 h-[1px] ${isLight ? 'bg-black/8' : 'bg-white/10'}`} />
 
+              {/* 4. 📥 Import Project (.json) */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onImportProject?.();
                 }}
-                className={`w-full px-3 py-1.5 text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer text-left ${
+                className={`w-full px-3.5 py-2 text-xs font-medium flex items-center gap-2.5 transition-colors cursor-pointer text-left ${
                   isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
                 }`}
               >
-                <LucideIcons.Upload size={13} className="text-[#bf5af2]" />
+                <LucideIcons.Upload size={14} className="text-[#bf5af2] flex-shrink-0" />
                 <span className="flex-1">Import Project (.json)</span>
               </button>
 
+              {/* 5. 📤 Export Project (.json) */}
               <button
                 onClick={() => {
                   setIsProjectsOpen(false);
                   onExportProject?.();
                 }}
-                className={`w-full px-3 py-1.5 text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer text-left ${
+                className={`w-full px-3.5 py-2 text-xs font-medium flex items-center gap-2.5 transition-colors cursor-pointer text-left ${
                   isLight ? 'hover:bg-black/5' : 'hover:bg-white/10'
                 }`}
               >
-                <LucideIcons.Download size={13} className="text-[#64d2ff]" />
+                <LucideIcons.Download size={14} className="text-[#64d2ff] flex-shrink-0" />
                 <span className="flex-1">Export Project (.json)</span>
               </button>
             </div>
